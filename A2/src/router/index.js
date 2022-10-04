@@ -3,6 +3,7 @@ import LoginPage from '../views/LoginPage'
 import WelcomePage from '../views/WelcomePage'
 import RegisterPage from '../views/RegisterPage'
 import HomePage from "../views/HomePage"
+import AdminLogin from "../views/AdminLogin"
 
 export default new VueRouter({
     mode: 'history',
@@ -14,6 +15,12 @@ export default new VueRouter({
         {
             path: '/login',
             component: LoginPage
+        },
+
+        {
+            name: 'admin-login',
+            path: '/admin-login',
+            component: AdminLogin
         },
         
         {
