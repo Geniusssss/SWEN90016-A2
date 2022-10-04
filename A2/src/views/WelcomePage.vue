@@ -5,6 +5,7 @@
         <el-container class="buttons">
             <el-button class="button" @click="routerTo('/login')">Login</el-button>
             <el-button class="button" @click="routerTo('/register')">Register</el-button>
+            <el-button class="button" @click="routerTo('/admin-login')">Login as Admin</el-button>
         </el-container>
     </el-container>
 </template>
