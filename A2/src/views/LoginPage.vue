@@ -42,8 +42,8 @@ export default {
                 })
                 console.log(result);
                 if (result) {
-                    alert("Login successfully!")
-                    this.$router.push( "/welcome" );
+                    // alert("Login successfully!")
+                    this.$router.push( "/home" );
                 }
                 else {
                     this.incorrect();

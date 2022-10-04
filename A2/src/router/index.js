@@ -2,6 +2,7 @@ import VueRouter from 'vue-router'
 import LoginPage from '../views/LoginPage'
 import WelcomePage from '../views/WelcomePage'
 import RegisterPage from '../views/RegisterPage'
+import HomePage from "../views/HomePage"
 
 export default new VueRouter({
     mode: 'history',
@@ -24,6 +25,12 @@ export default new VueRouter({
             name: 'welcome',
             path: '/welcome',
             component: WelcomePage
+        },
+
+        {
+            name: 'home',
+            path: '/home',
+            component: HomePage
         },
     ]
 })
