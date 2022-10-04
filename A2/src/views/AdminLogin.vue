@@ -43,7 +43,7 @@ export default {
                 console.log(result);
                 if (result) {
                     // alert("Login successfully!")
-                    this.$router.push("/home");
+                    this.$router.push("/admin-home");
                 }
                 else {
                     this.incorrect();
