@@ -4,6 +4,7 @@ import WelcomePage from '../views/WelcomePage'
 import RegisterPage from '../views/RegisterPage'
 import HomePage from "../views/HomePage"
 import AdminLogin from "../views/AdminLogin"
+import AdminHome from "../views/AdminHome"
 
 export default new VueRouter({
     mode: 'history',
@@ -38,6 +39,12 @@ export default new VueRouter({
             name: 'home',
             path: '/home',
             component: HomePage
+        },
+
+        {
+            name: 'admin-home',
+            path: '/admin-home',
+            component: AdminHome
         },
     ]
 })
