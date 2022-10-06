@@ -5,7 +5,7 @@
       <h1>Nice to see you back, user {{this.user.email}}!</h1>
       <div class="block">
         <span class="demonstration">Restricted Languages Pages</span>
-        <el-select v-model="value" placeholder="Select">
+        <el-select v-model="selectedRestrictedLangPage" placeholder="Select">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -13,6 +13,7 @@
             :value="item.value">
           </el-option>
         </el-select>
+        <el-button class="button" @click="accessRestritedLangPage">Go</el-button>
       </div>
     </el-main>
     <!-- <el-footer>Footer</el-footer> -->
@@ -40,8 +41,39 @@
           label: 'English Language - Dynamic Demonstration Example'
           },
         ],
-        value: ''
+        selectedRestrictedLangPage: ''
       }
+    },
+    methods: {
+      accessRestritedLangPage() {
+        if (this.checkIfUserhaveAccess()) {
+          alert("You do have access to the page!")
+        }
+        else {
+          // if do not have access to the page, pop up a window with 2 buttons
+          // 1st button: Request Access; 2nd button: cancel
+          this.$alert('You do not have access to the specified page!'
+                , 'Request access to the page?',
+                {
+                  // confirmButtonText: 'confirm',
+                  // cancelButtonText: 'Cancel',
+                  showConfirmButton: true,
+                  showCancelButton: true,    
+                }
+          ).then(() => {
+              // alert("You got here");
+              this.requestPageAccess();
+            }
+          );
+        }
+      },
+      checkIfUserhaveAccess() {
+        return false;
+      },
+      requestPageAccess() {
+
+      }
+
     }
   };
 </script>
