@@ -20,7 +20,7 @@ export default {
             email: '',
             pswd: '',
             pswd2: '',
-            user: { email: '', pswd: '' },
+            user: { email: '', pswd: '', isAdmin: false, idlAccess: false, ddeAccess: {create: false, read: false, write: false, delete: false} },
             allUsers: [],
         }
     },
