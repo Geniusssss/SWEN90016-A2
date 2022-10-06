@@ -1,13 +1,49 @@
 <template>
   <el-container>
     <el-header>Home</el-header>
-    <el-main>Main</el-main>
+    <el-main>
+      <h1>Nice to see you back, user {{this.user.email}}!</h1>
+      <div class="block">
+        <span class="demonstration">Restricted Languages Pages</span>
+        <el-select v-model="value" placeholder="Select">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </div>
+    </el-main>
     <!-- <el-footer>Footer</el-footer> -->
   </el-container>
   </template>
 
 <script>
+  export default {
+    name: 'HomePage',
+    data() {
+      return {
+        user: this.$route.query.user,
 
+        options: [
+          {
+          value: 'item-1',
+          label: 'English Language - Static Example'
+          },
+          {
+          value: 'item-2',
+          label: 'Indigenous Dhudhuroa Language'
+          },
+          {
+          value: 'item-3',
+          label: 'English Language - Dynamic Demonstration Example'
+          },
+        ],
+        value: ''
+      }
+    }
+  };
 </script>
 
 <style>
