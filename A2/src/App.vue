@@ -11,8 +11,17 @@
 <script>
 export default {
   name: 'App',
-  components: {
-}
+  data() {
+        return {
+            allUsers: [
+                { email: "123@", pswd: "123" },
+                { email: "456@", pswd: "456" }
+            ]
+        }
+    },
+  created() {
+    localStorage.setItem("allUsers", JSON.stringify(this.allUsers));
+  }
 }
 </script>
 
