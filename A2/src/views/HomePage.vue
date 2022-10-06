@@ -5,7 +5,7 @@
       <h1>Nice to see you back, user {{this.user.email}}!</h1>
       <div class="block">
         <span class="demonstration">Restricted Languages Pages</span>
-        <el-select v-model="value" placeholder="Select">
+        <el-select v-model="selectedRestrictedLangPage" placeholder="Select">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -13,6 +13,28 @@
             :value="item.value">
           </el-option>
         </el-select>
+        <el-button class="button" @click="accessRestritedLangPage">Go</el-button>
+      </div>
+
+      <div>
+      <el-dialog title="Request Form" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+            <!-- <el-form-item label="Access Item name" :label-width="formLabelWidth">
+            <el-input v-model="form.name" autocomplete="off"></el-input>
+            </el-form-item> -->
+            <el-form-item label="Access Type:" :label-width="formLabelWidth">
+            <el-select v-model="form.region" placeholder="Please select your access type">
+                <el-option label="READ ONLY" value="read"></el-option>
+                <el-option label="WRITE ONLY" value="write"></el-option>
+                <el-option label="FULL ACCESS" value="full"></el-option>
+            </el-select>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="requestPageAccess">Submit Request</el-button>
+        </div>
+      </el-dialog>
       </div>
     </el-main>
     <!-- <el-footer>Footer</el-footer> -->
@@ -25,7 +47,6 @@
     data() {
       return {
         user: this.$route.query.user,
-
         options: [
           {
           value: 'item-1',
@@ -40,8 +61,55 @@
           label: 'English Language - Dynamic Demonstration Example'
           },
         ],
-        value: ''
+        selectedRestrictedLangPage: '',
+        dialogFormVisible: false,
+        form: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        },
+        formLabelWidth: '120px'
       }
+    },
+    methods: {
+      accessRestritedLangPage() {
+        if (this.checkIfUserhaveAccess()) {
+          alert("You do have access to the page!")
+        }
+        else {
+          // if do not have access to the page, pop up a window with 2 buttons
+          // 1st button: Request Access; 2nd button: cancel
+          this.$alert('You do not have access to the specified page!'
+                , 'Request access to the page?',
+                {
+                  // confirmButtonText: 'confirm',
+                  // cancelButtonText: 'Cancel',
+                  showConfirmButton: true,
+                  showCancelButton: true,    
+                }
+          ).then(() => {
+              // alert("You got here");
+            this.dialogFormVisible = true;
+              // this.requestPageAccess();
+            }
+          );
+        }
+      },
+      checkIfUserhaveAccess() {
+        return false;
+      },
+      requestPageAccess() {
+        this.dialogFormVisible = false;
+        this.$message("Request submitted!")
+        // Implement the request access logic here
+        // Add the request info to DB 
+      }
+
     }
   };
 </script>
