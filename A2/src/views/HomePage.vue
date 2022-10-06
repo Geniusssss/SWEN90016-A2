@@ -15,6 +15,27 @@
         </el-select>
         <el-button class="button" @click="accessRestritedLangPage">Go</el-button>
       </div>
+
+      <div>
+      <el-dialog title="Request Form" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+            <!-- <el-form-item label="Access Item name" :label-width="formLabelWidth">
+            <el-input v-model="form.name" autocomplete="off"></el-input>
+            </el-form-item> -->
+            <el-form-item label="Access Type:" :label-width="formLabelWidth">
+            <el-select v-model="form.region" placeholder="Please select your access type">
+                <el-option label="READ ONLY" value="read"></el-option>
+                <el-option label="WRITE ONLY" value="write"></el-option>
+                <el-option label="FULL ACCESS" value="full"></el-option>
+            </el-select>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="requestPageAccess">Submit Request</el-button>
+        </div>
+      </el-dialog>
+      </div>
     </el-main>
     <!-- <el-footer>Footer</el-footer> -->
   </el-container>
@@ -26,7 +47,6 @@
     data() {
       return {
         user: this.$route.query.user,
-
         options: [
           {
           value: 'item-1',
@@ -41,7 +61,19 @@
           label: 'English Language - Dynamic Demonstration Example'
           },
         ],
-        selectedRestrictedLangPage: ''
+        selectedRestrictedLangPage: '',
+        dialogFormVisible: false,
+        form: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        },
+        formLabelWidth: '120px'
       }
     },
     methods: {
@@ -62,7 +94,8 @@
                 }
           ).then(() => {
               // alert("You got here");
-              this.requestPageAccess();
+            this.dialogFormVisible = true;
+              // this.requestPageAccess();
             }
           );
         }
@@ -71,7 +104,10 @@
         return false;
       },
       requestPageAccess() {
-
+        this.dialogFormVisible = false;
+        this.$message("Request submitted!")
+        // Implement the request access logic here
+        // Add the request info to DB 
       }
 
     }
