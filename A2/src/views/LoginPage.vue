@@ -43,7 +43,13 @@ export default {
                 console.log(result);
                 if (result) {
                     // alert("Login successfully!")
-                    this.$router.push( "/home" );
+                    // this.$router.push( "/home" );
+                    this.$router.push({
+                        path: '/home',
+                        query: {
+                            user: this.user
+                        }
+                    });
                 }
                 else {
                     this.incorrect();
