@@ -1,14 +1,16 @@
 <template>
     <form class="form">
+        <el-page-header @back="routerTo('/')" content="Register" title="Back">
+        </el-page-header>
         <div class="container">
             <div id="textblock">Register Your Account</div>
             <label for="uname" class="littletext"><b>Username</b></label>
-            <input type="text" placeholder="Enter email" required v-model="email">
+            <input type="text" placeholder="Enter username" required v-model="username">
             <label for="psw" class="littletext"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" required v-model="pswd">
             <label for="psw" class="littletext"><b>Confirm Password</b></label>
             <input type="password" placeholder="Enter Password Again" required v-model="pswd2">
-            <el-button class="button" @click="register">Register</el-button>
+            <el-button type="primary" class="button" @click="register">Register</el-button>
         </div>
     </form>
 </template>
@@ -17,10 +19,10 @@ export default {
     name: 'RegisterPage',
     data() {
         return {
-            email: '',
+            username: '',
             pswd: '',
             pswd2: '',
-            user: { email: '', pswd: '', isAdmin: false, idlAccess: false, ddeAccess: {create: false, read: false, write: false, delete: false} },
+            user: { username: '', pswd: '', isAdmin: false, idlAccess: false, ddeAccess: {create: false, read: false, write: false, delete: false} },
             allUsers: [],
         }
     },
@@ -28,17 +30,13 @@ export default {
         this.getUserList();
     },
     methods: {
-        incorrect() {
-            this.$alert('Please try to input the right info'
-                , 'Wrong Email or Password',
-                {
-                    confirmButtonText: 'confirm',
-                });
+        routerTo(path) {
+            this.$router.push(path)
         },
         register() {
             {
-                if (this.email == "") {
-                    alert("Please enter your email");
+                if (this.username == "") {
+                    alert("Please enter your username");
                     return
                 }
                 if (this.pswd == "") {
@@ -50,7 +48,7 @@ export default {
                     return
                 }
                 var duplicate = this.allUsers.some(item => {
-                    if (item.email == this.email) {
+                    if (item.username == this.username) {
                         return true
                     }
                 })
@@ -68,7 +66,7 @@ export default {
             this.allUsers = result;
         },
         addUser() {
-            this.user.email = this.email;
+            this.user.username = this.username;
             this.user.pswd = this.pswd;
             this.allUsers.push(this.user);
             console.log(this.allUsers);
@@ -95,22 +93,6 @@ export default {
     flex-grow: 0;
 }
 
-#welcome {
-    width: 360px;
-    height: 24px;
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    text-align: center;
-    color: #667085;
-    flex: none;
-    order: 1;
-    align-self: stretch;
-    flex-grow: 0;
-}
-
 .littletext {
     width: 36px;
     height: 20px;
@@ -122,48 +104,6 @@ export default {
     color: #344054;
     flex: none;
     order: 0;
-    flex-grow: 0;
-}
-
-#remember {
-    width: 223px;
-    height: 20px;
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 20px;
-    margin-right: 150px;
-    color: #344054;
-    flex: none;
-    order: 0;
-    align-self: stretch;
-    flex-grow: 0;
-}
-
-.checkbox {
-    box-sizing: border-box;
-    width: 16px;
-    height: 16px;
-    background: #FFFFFF;
-    border: 1px solid #D0D5DD;
-    border-radius: 4px;
-    flex: none;
-    order: 0;
-    flex-grow: 0;
-}
-
-#forget {
-    width: 113px;
-    height: 20px;
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 20px;
-    color: #6941C6;
-    flex: none;
-    order: 1;
     flex-grow: 0;
 }
 
@@ -187,27 +127,14 @@ input[type=password] {
 }
 
 .button {
-    background-color: #7F56D9;
-    color: white;
     padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
+    margin: 20px 0;
     width: 100%;
     border-radius: 8px;
 }
 
-button:hover {
-    opacity: 0.8;
-}
-
-.cancelbtn {
-    width: auto;
-    padding: 10px 18px;
-    background-color: lightblue;
-}
-
 .container {
+    margin-top: 20px;
     padding: 16px;
     width: 100%;
 }
