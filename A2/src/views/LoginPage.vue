@@ -17,11 +17,11 @@ export default {
     data() {
         return {
             user: { email: '', pswd: '' },
-            allUsers: [
-                { email: "123@", pswd: "123" },
-                { email: "456@", pswd: "456" }
-            ]
+            allUsers: [],
         }
+    },
+    created() {
+        this.getUserList();
     },
     methods: {
         incorrect() {
@@ -33,7 +33,7 @@ export default {
         },
         validation() {
             {
-                var result = this.allUsers.some(item=>{
+                var result = this.allUsers.some(item => {
                     if (item.email == this.user.email) {
                         if (item.pswd == this.user.pswd) {
                             return true;
@@ -56,6 +56,10 @@ export default {
                 }
             }
         },
+        getUserList() {
+            var result = JSON.parse(localStorage.getItem("allUsers") || '[]');
+            this.allUsers = result
+        }
     },
 }
 </script>

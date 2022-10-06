@@ -3,11 +3,11 @@
         <div class="container">
             <div id="textblock">Register Your Account</div>
             <label for="uname" class="littletext"><b>Username</b></label>
-            <input type="text" placeholder="Enter email" required v-model="user.email">
+            <input type="text" placeholder="Enter email" required v-model="email">
             <label for="psw" class="littletext"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" required v-model="user.pswd">
+            <input type="password" placeholder="Enter Password" required v-model="pswd">
             <label for="psw" class="littletext"><b>Confirm Password</b></label>
-            <input type="password" placeholder="Enter Password Again" required v-model="user.pswd2">
+            <input type="password" placeholder="Enter Password Again" required v-model="pswd2">
             <el-button class="button" @click="register">Register</el-button>
         </div>
     </form>
@@ -17,8 +17,15 @@ export default {
     name: 'RegisterPage',
     data() {
         return {
-            user: { email: '', pswd: '', pswd2: ''},
+            email: '',
+            pswd: '',
+            pswd2: '',
+            user: { email: '', pswd: '' },
+            allUsers: [],
         }
+    },
+    created() {
+        this.getUserList();
     },
     methods: {
         incorrect() {
@@ -30,22 +37,43 @@ export default {
         },
         register() {
             {
-                if (this.user.email=="") {
+                if (this.email == "") {
                     alert("Please enter your email");
                     return
                 }
-                if (this.user.pswd=="") {
+                if (this.pswd == "") {
                     alert("Please enter your password");
                     return
                 }
-                if (this.user.pswd!=this.user.pswd2) {
+                if (this.pswd != this.pswd2) {
                     alert("Please confirm your password");
                     return
                 }
-                alert("Registered!")
-                this.$router.push( "/login" );
+                var duplicate = this.allUsers.some(item => {
+                    if (item.email == this.email) {
+                        return true
+                    }
+                })
+                if (duplicate) {
+                    alert("User already exists");
+                    return
+                }
+                this.addUser();
+                alert("Registered!");
+                this.$router.push("/login");
             }
         },
+        getUserList() {
+            var result = JSON.parse(localStorage.getItem("allUsers") || '[]');
+            this.allUsers = result;
+        },
+        addUser() {
+            this.user.email = this.email;
+            this.user.pswd = this.pswd;
+            this.allUsers.push(this.user);
+            console.log(this.allUsers);
+            localStorage.setItem("allUsers", JSON.stringify(this.allUsers));
+        }
     },
 }
 </script>
