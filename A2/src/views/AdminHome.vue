@@ -66,7 +66,7 @@ export default {
 }
 </script>
   
-<style>
+<style scoped>
 .logo {
     margin-top: 30px;
     margin-bottom: 30px;

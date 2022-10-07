@@ -22,7 +22,7 @@ export default {
             username: '',
             pswd: '',
             pswd2: '',
-            user: { username: '', pswd: '', isAdmin: false, idlAccess: false, ddeAccess: {create: false, read: false, write: false, delete: false} },
+            user: { username: '', pswd: '', isAdmin: false, idlAccess: false, ddeAccess: { create: false, read: false, write: false, delete: false } },
             allUsers: [],
         }
     },
