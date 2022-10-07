@@ -2,9 +2,22 @@ import VueRouter from 'vue-router'
 import LoginPage from '../views/LoginPage'
 import WelcomePage from '../views/WelcomePage'
 import RegisterPage from '../views/RegisterPage'
-import HomePage from "../views/HomePage"
-import AdminLogin from "../views/AdminLogin"
 import AdminHome from "../views/AdminHome"
+import HomePage from "../views/HomePage"
+import AuthorizationRequest from "../components/AuthorizationRequest"
+import EnglishDynamic from "../components/EnglishDynamic"
+import EnglishStatic from "../components/EnglishStatic"
+import EnglishStaticCRP from "../components/EnglishStaticCRP"
+import EnglishStaticICK from "../components/EnglishStaticICK"
+import FATSIL from "../components/FATSIL"
+import IndigenousDL from "../components/IndigenousDL"
+import TextSearching from "../components/TextSearching"
+import UserGroup from "../components/UserGroup"
+import AuthorizationAdmin from "../components/AuthorizationAdmin"
+
+import Vue from 'vue'
+
+Vue.use(VueRouter)
 
 export default new VueRouter({
     mode: 'history',
@@ -17,12 +30,6 @@ export default new VueRouter({
             path: '/login',
             component: LoginPage
         },
-
-        {
-            name: 'admin-login',
-            path: '/admin-login',
-            component: AdminLogin
-        },
         
         {
             path: '/register',
@@ -30,21 +37,74 @@ export default new VueRouter({
         },
 
         {
-            name: 'welcome',
             path: '/welcome',
             component: WelcomePage
         },
 
         {
-            name: 'home',
             path: '/home',
-            component: HomePage
+            name: 'HomePage',
+            component: HomePage,
+            children:[
+                {
+                    path: '/home/request',
+                    name: 'Request',
+                    component: AuthorizationRequest,
+                },
+                {
+                    path: '/home/englishstatic',
+                    name: 'EnglishStatic',
+                    component: EnglishStatic,
+                },
+                {
+                    path: '/home/search',
+                    name: 'TextSearching',
+                    component: TextSearching,
+                },
+                {
+                    path: '/home/englishdynamic',
+                    name: 'EnglishDynamic',
+                    component: EnglishDynamic,
+                },
+                {
+                    path: '/home/englishstaticcrp',
+                    name: 'EnglishStaticCRP',
+                    component: EnglishStaticCRP,
+                },
+                {
+                    path: '/home/englishstaticick',
+                    name: 'EnglishStaticICK',
+                    component: EnglishStaticICK,
+                },
+                {
+                    path: '/home/fatsil',
+                    name: 'FATSIL',
+                    component: FATSIL,
+                },
+                {
+                    path: '/home/indigenousdl',
+                    name: 'IndigenousDL',
+                    component: IndigenousDL,
+                },
+            ]
         },
 
         {
-            name: 'admin-home',
             path: '/admin-home',
-            component: AdminHome
+            name: 'AdminHome',
+            component: AdminHome,
+            children:[
+                {
+                    path: '/admin-home/usergroup',
+                    name: 'UserGroup',
+                    component: UserGroup,
+                },
+                {
+                    path: '/admin-home/authorizationadmin',
+                    name: 'AuthorizationAdmin',
+                    component: AuthorizationAdmin,
+                },
+            ]
         },
     ]
 })
