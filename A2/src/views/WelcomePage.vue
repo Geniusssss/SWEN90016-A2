@@ -17,15 +17,16 @@
                 </el-carousel-item>
             </el-carousel>
         </div>
+
     </div>
 </template>
 
 <script>
 export default {
-    name: 'WelcomePage',
+    name: "WelcomePage",
     methods: {
         routerTo(path) {
-            this.$router.push(path)
+            this.$router.push(path);
         },
     }
 }
