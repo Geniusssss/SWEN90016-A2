@@ -1,13 +1,15 @@
 <template>
     <form class="form">
+        <el-page-header @back="routerTo('/')" content="Login" title="Back">
+        </el-page-header>
         <div class="container">
             <div id="textblock">Log in to your account</div>
             <p id="welcome">Welcome! Please enter your details</p>
             <label for="uname" class="littletext"><b>Username</b></label>
-            <input type="text" placeholder="Enter email" required v-model="user.email">
+            <input type="text" placeholder="Enter username" required v-model="username">
             <label for="psw" class="littletext"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" required v-model="user.pswd">
-            <el-button class="button" @click="validation">Login</el-button>
+            <input type="password" placeholder="Enter Password" required v-model="pswd">
+            <el-button type="primary" class="button" @click="validation">Login</el-button>
         </div>
     </form>
 </template>
@@ -16,7 +18,9 @@ export default {
     name: 'LoginPage',
     data() {
         return {
-            user: { email: '', pswd: '' },
+            username: '',
+            pswd: '',
+            user: '',
             allUsers: [],
         }
     },
@@ -24,9 +28,12 @@ export default {
         this.getUserList();
     },
     methods: {
+        routerTo(path) {
+            this.$router.push(path)
+        },
         incorrect() {
             this.$alert('Please try to input the right info'
-                , 'Wrong Email or Password',
+                , 'Wrong Username or Password',
                 {
                     confirmButtonText: 'confirm',
                 });
@@ -34,22 +41,30 @@ export default {
         validation() {
             {
                 var result = this.allUsers.some(item => {
-                    if (item.email == this.user.email) {
-                        if (item.pswd == this.user.pswd) {
+                    if (item.username == this.username) {
+                        if (item.pswd == this.pswd) {
+                            this.user = item;
                             return true;
                         }
                     }
                 })
-                console.log(result);
                 if (result) {
-                    // alert("Login successfully!")
-                    // this.$router.push( "/home" );
-                    this.$router.push({
-                        path: '/home',
-                        query: {
-                            user: this.user
-                        }
-                    });
+                    localStorage.setItem("currentUser", JSON.stringify(this.user));
+                    if (this.user.isAdmin) {
+                        this.$router.push({
+                            path: '/admin-home',
+                            query: {
+                                user: this.user
+                            }
+                        });
+                    } else {
+                        this.$router.push({
+                            path: '/home',
+                            query: {
+                                user: this.user
+                            }
+                        });
+                    }
                 }
                 else {
                     this.incorrect();
@@ -111,48 +126,6 @@ export default {
     flex-grow: 0;
 }
 
-#remember {
-    width: 223px;
-    height: 20px;
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 20px;
-    margin-right: 150px;
-    color: #344054;
-    flex: none;
-    order: 0;
-    align-self: stretch;
-    flex-grow: 0;
-}
-
-.checkbox {
-    box-sizing: border-box;
-    width: 16px;
-    height: 16px;
-    background: #FFFFFF;
-    border: 1px solid #D0D5DD;
-    border-radius: 4px;
-    flex: none;
-    order: 0;
-    flex-grow: 0;
-}
-
-#forget {
-    width: 113px;
-    height: 20px;
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 20px;
-    color: #6941C6;
-    flex: none;
-    order: 1;
-    flex-grow: 0;
-}
-
 .form {
     border: 300px solid #fff;
     margin: auto;
@@ -173,27 +146,14 @@ input[type=password] {
 }
 
 .button {
-    background-color: #7F56D9;
-    color: white;
     padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
+    margin: 20px 0;
     width: 100%;
     border-radius: 8px;
 }
 
-button:hover {
-    opacity: 0.8;
-}
-
-.cancelbtn {
-    width: auto;
-    padding: 10px 18px;
-    background-color: lightblue;
-}
-
 .container {
+    margin-top: 20px;
     padding: 16px;
     width: 100%;
 }
