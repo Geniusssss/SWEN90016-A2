@@ -26,23 +26,23 @@ export default {
     return {
       search: "",
       posts: [
-        {
-          id: 1,
-          title: "Post 1",
-          body: "Vue.js is cool"
-        },
-        {
-          id: 2,
-          title: "Post 2",
-          body: "Javascript is cool"
-        }
       ]
     };
+  },
+  created() {
+    fetch("http://localhost:3000/posts")
+    .then(res => res.json())
+    .then(json => {
+        json.map(data => {
+            this.posts.push(data);
+            console.log(this.posts)
+        })
+    })
   },
   computed: {
     filteredPosts() {
       return this.posts.filter(post =>
-        post.body.toLowerCase().includes(this.search.toLowerCase())
+        post.author.toLowerCase().includes(this.search.toLowerCase())
       );
     }
   }
