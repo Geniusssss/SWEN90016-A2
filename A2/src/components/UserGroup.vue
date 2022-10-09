@@ -1,35 +1,17 @@
 <template>
     <div>
-        <div class="content">
-            <div class="title">Authority Management</div>
+        <div class="title">Group Management</div>
+        <el-button class="create-group" type="primary" plain @click="createGroup">Create a Group</el-button>
+        <div v-if="allGroupMembers != ''">
+            <el-tabs class="tabs" type="border-card" v-model="defaultTab">
+                <el-tab-pane v-for="group in allGroupMembers" :key="group.groupName" :label="group.groupName"
+                    :name="group.groupName">
+                    <el-transfer v-model="group.value" :data="group.data" :titles="['Out Group', 'In Group']">
+                    </el-transfer>
+                    <el-button class="confirm" type="primary" @click="updateGroup(group)">Confirm</el-button>
+                </el-tab-pane>
+            </el-tabs>
         </div>
-        <div class="row-section">
-            <div class="list-title-1" type="margin-left: 50px">User Name</div>
-            <div class="list-title-2">Indigenous Dhudhuroa Language</div>
-            <div class="double-line">
-                <div class="list-title-3">Dynamic Demonstration Example</div>
-                <div class="crwd">
-                    <div class="crwd-section">Create</div>
-                    <div class="crwd-section">Read</div>
-                    <div class="crwd-section">Write</div>
-                    <div class="crwd-section">Delete</div>
-                </div>
-            </div>
-        </div>
-        <div class="user-list">
-            <div v-for="user in allUsers" :key="user.username">
-                <div v-if="!user.isAdmin" class="row-section">
-                    <i class="el-icon-user-solid"></i>
-                    <div class="user-name">{{user.username}}</div>
-                    <el-switch v-model="user.idlAccess" class="switch-1" @change="update"></el-switch>
-                    <el-switch v-model="user.ddeAccess.create" class="switch-2" @change="update"></el-switch>
-                    <el-switch v-model="user.ddeAccess.read" class="switch-3" @change="update"></el-switch>
-                    <el-switch v-model="user.ddeAccess.write" class="switch-3" @change="update"></el-switch>
-                    <el-switch v-model="user.ddeAccess.delete" class="switch-3" @change="update"></el-switch>
-                </div>
-            </div>
-        </div>
-
     </div>
 </template>
   
@@ -38,38 +20,191 @@ export default {
     name: 'UserGroup',
     data() {
         return {
-            allUsers: [],
+            defaultTab: 'Group 1',
+            newGroup: { groupName: '', users: [] },
+            allGroups: '',
+            allUsers: '',
+            allUsersData: [],
+            allGroupMembers: [],
         }
     },
     created() {
-        this.getUserList();
+        this.getGroups();
     },
     methods: {
         routerTo(path) {
             this.$router.push(path)
         },
-        getUserList() {
-            var result = JSON.parse(localStorage.getItem("allUsers") || '[]');
-            this.allUsers = result
+        getGroupMembers() {
+            for (let index = 0; index < this.allGroups.length; index++) {
+                var groupMembers = { groupName: '', data: [], value: [] };
+                let group = this.allGroups[index];
+                groupMembers.groupName = group.groupName;
+                groupMembers.data = this.allUsersData;
+                for (let x = 0; x < group.users.length; x++) {
+                    groupMembers.value.push(group.users[x])
+                }
+                this.allGroupMembers.push(groupMembers);
+            }
         },
-        update() {
-            localStorage.setItem("allUsers", JSON.stringify(this.allUsers));
-        }
-    }
+        createGroup() {
+            this.$prompt('Input Group Name:', 'Create a New Group', {
+                confirmButtonText: 'Confirm',
+                cancelButtonText: 'Cancel',
+            }).then(({ value }) => {
+                this.newGroup.groupName = value;
+                this.insertGroup(value);
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: 'Cancelled'
+                });
+            });
+        },
+        getAllUsersData() {
+            for (let index = 0; index < this.allUsers.length; index++) {
+                this.allUsersData.push({ key: this.allUsers[index].username, label: this.allUsers[index].username })
+            }
+            this.getGroupMembers();
+        },
+        updateGroup(group) {
+            let axios = require('axios');
+            let data = JSON.stringify({
+                "collection": "userGroup",
+                "database": "mymongo",
+                "dataSource": "Cluster0",
+                "filter": { "groupName": group.groupName },
+                "update": {
+                    "groupName": group.groupName,
+                    "users": group.value,
+                }
+            });
+            let config = {
+                method: 'post',
+                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/updateOne',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Request-Headers': '*',
+                    'api-key': 'alJbGe2FTUy9nKCQiZOgQIQR6y5X28uDGjPW5EM76XnSjG9Hyneag4xe5gT8cnkg',
+                },
+                data: data
+            };
+            axios(config)
+                .then((response) => {
+                    console.log(response);
+                    this.allGroups = '';
+                    this.allUsers = '';
+                    this.allUsersData = [];
+                    this.allGroupMembers = [];
+                    this.getGroups();
+                    this.$message({
+                        type: 'success',
+                        message: 'Update Successfully!',
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        insertGroup(value) {
+            let axios = require('axios');
+            let data = JSON.stringify({
+                "collection": "userGroup",
+                "database": "mymongo",
+                "dataSource": "Cluster0",
+                "document": this.newGroup,
+            });
+            let config = {
+                method: 'post',
+                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/insertOne',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Request-Headers': '*',
+                    'api-key': 'alJbGe2FTUy9nKCQiZOgQIQR6y5X28uDGjPW5EM76XnSjG9Hyneag4xe5gT8cnkg',
+                },
+                data: data
+            };
+            axios(config)
+                .then((response) => {
+                    console.log(response)
+                    this.$message({
+                        type: 'success',
+                        message: 'Create Successfully: ' + value
+                    });
+                    this.allGroups = '';
+                    this.allUsers = '';
+                    this.allUsersData = [];
+                    this.allGroupMembers = [];
+                    this.getGroups();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        getGroups() {
+            let axios = require('axios');
+            let data = JSON.stringify({
+                "collection": "userGroup",
+                "database": "mymongo",
+                "dataSource": "Cluster0",
+            });
+            let config = {
+                method: 'post',
+                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/find',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Request-Headers': '*',
+                    'api-key': 'alJbGe2FTUy9nKCQiZOgQIQR6y5X28uDGjPW5EM76XnSjG9Hyneag4xe5gT8cnkg',
+                },
+                data: data
+            };
+            axios(config)
+                .then((response) => {
+                    this.allGroups = response.data.documents;
+                    this.getUsers();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        getUsers() {
+            let axios = require('axios');
+            let data = JSON.stringify({
+                "collection": "users",
+                "database": "mymongo",
+                "dataSource": "Cluster0",
+                "filter": {
+                    "isAdmin": false
+                },
+            });
+            let config = {
+                method: 'post',
+                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/find',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Request-Headers': '*',
+                    'api-key': 'alJbGe2FTUy9nKCQiZOgQIQR6y5X28uDGjPW5EM76XnSjG9Hyneag4xe5gT8cnkg',
+                },
+                data: data
+            };
+            axios(config)
+                .then((response) => {
+                    this.allUsers = response.data.documents
+                    this.getAllUsersData();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+    },
 }
 </script>
   
 <style scoped>
-.content {
+.title {
     margin: 50px;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
     width: 1096px;
     height: 66px;
-}
-
-.title {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 500;
@@ -78,78 +213,25 @@ export default {
     color: #101828;
 }
 
-.user-list {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
+.create-group {
+    margin-left: 50px;
+    margin-top: -20px;
+    margin-bottom: -30px;
+}
+
+.tabs {
     margin: 50px;
 }
 
-.row-section {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-}
-
-.list-title-1 {
-    margin-left: 80px;
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 15px;
-    color: #667085;
-}
-
-.list-title-2 {
-    margin-left: 100px;
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 15px;
-    color: #667085;
-}
-
-.list-title-3 {
-    margin-left: 100px;
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 15px;
-    color: #667085;
-}
-
-.switch-1 {
-    margin-left: 120px;
-}
-
-.switch-2 {
-    margin-left: 270px;
-}
-
-.switch-3 {
-    margin-left: 100px;
-}
-
-.double-line {
-    margin-left: 50px;
+.transfer-button {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    align-items: flex-start;
+    gap: 50px;
 }
 
-.crwd {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 15px;
-    color: #667085;
-}
-
-.crwd-section {
-    padding-left: 100px;
+.confirm {
+    margin-top: 30px;
+    margin-left: 245px;
 }
 </style>

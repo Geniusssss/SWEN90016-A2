@@ -14,6 +14,7 @@ import IndigenousDL from "../components/IndigenousDL"
 import TextSearching from "../components/TextSearching"
 import UserGroup from "../components/UserGroup"
 import AuthorizationAdmin from "../components/AuthorizationAdmin"
+import AccessManagement from "../components/AccessManagement"
 
 import Vue from 'vue'
 
@@ -103,6 +104,11 @@ export default new VueRouter({
                     path: '/admin-home/authorizationadmin',
                     name: 'AuthorizationAdmin',
                     component: AuthorizationAdmin,
+                },
+                {
+                    path: '/admin-home/accessmanagement',
+                    name: 'AccessManagement',
+                    component: AccessManagement,
                 },
             ]
         },

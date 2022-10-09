@@ -25,7 +25,7 @@ export default {
         }
     },
     created() {
-        this.getUserList();
+        this.postUserList();
     },
     methods: {
         routerTo(path) {
@@ -71,9 +71,31 @@ export default {
                 }
             }
         },
-        getUserList() {
-            var result = JSON.parse(localStorage.getItem("allUsers") || '[]');
-            this.allUsers = result
+        postUserList() {
+            let axios = require('axios');
+            let data = JSON.stringify({
+                "collection": "users",
+                "database": "mymongo",
+                "dataSource": "Cluster0",
+            });
+            let config = {
+                method: 'post',
+                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/find',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Request-Headers': '*',
+                    'api-key': 'alJbGe2FTUy9nKCQiZOgQIQR6y5X28uDGjPW5EM76XnSjG9Hyneag4xe5gT8cnkg',
+                },
+                data: data
+            };
+            axios(config)
+                .then((response) => {
+                    console.log(response.data.documents);
+                    this.allUsers = response.data.documents
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         }
     },
 }
