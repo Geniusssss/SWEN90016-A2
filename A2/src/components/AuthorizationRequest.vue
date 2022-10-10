@@ -114,7 +114,7 @@ export default {
                 "database": "mymongo",
                 "dataSource": "Cluster0",
                 "document": {
-                "username": this.user.email,
+                "username": this.user.username,
                 "content_type": this.selectedRestrictedLangPage,
                 "permission_type": this.form.accessType,
                 "granted": false,
