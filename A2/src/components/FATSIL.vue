@@ -51,6 +51,7 @@ export default {
 }
 
 .logo {
+    width: 20%;
     margin-bottom: 30px;
 }
 

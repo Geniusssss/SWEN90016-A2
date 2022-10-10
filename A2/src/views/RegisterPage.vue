@@ -57,20 +57,66 @@ export default {
                     return
                 }
                 this.addUser();
-                alert("Registered!");
-                this.$router.push("/login");
             }
         },
+        insertUser() {
+            let axios = require('axios');
+            let data = JSON.stringify({
+                "collection": "users",
+                "database": "mymongo",
+                "dataSource": "Cluster0",
+                "document": this.user,
+            });
+            let config = {
+                method: 'post',
+                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/insertOne',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Request-Headers': '*',
+                    'api-key': 'alJbGe2FTUy9nKCQiZOgQIQR6y5X28uDGjPW5EM76XnSjG9Hyneag4xe5gT8cnkg',
+                },
+                data: data
+            };
+            axios(config)
+                .then((response) => {
+                    console.log(response.data.documents);
+                    alert("Registered!");
+                    this.$router.push("/login");
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
         getUserList() {
-            var result = JSON.parse(localStorage.getItem("allUsers") || '[]');
-            this.allUsers = result;
+            let axios = require('axios');
+            let data = JSON.stringify({
+                "collection": "users",
+                "database": "mymongo",
+                "dataSource": "Cluster0",
+            });
+            let config = {
+                method: 'post',
+                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/find',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Request-Headers': '*',
+                    'api-key': 'alJbGe2FTUy9nKCQiZOgQIQR6y5X28uDGjPW5EM76XnSjG9Hyneag4xe5gT8cnkg',
+                },
+                data: data
+            };
+            axios(config)
+                .then((response) => {
+                    console.log(response.data.documents);
+                    this.allUsers = response.data.documents
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         },
         addUser() {
             this.user.username = this.username;
             this.user.pswd = this.pswd;
-            this.allUsers.push(this.user);
-            console.log(this.allUsers);
-            localStorage.setItem("allUsers", JSON.stringify(this.allUsers));
+            this.insertUser();
         }
     },
 }

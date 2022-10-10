@@ -11,6 +11,10 @@
                     <i class="el-icon-document"></i>
                     <span slot="title">Authorization Admin</span>
                 </el-menu-item>
+                <el-menu-item index="/admin-home/accessmanagement">
+                    <i class="el-icon-document"></i>
+                    <span slot="title">Access Management</span>
+                </el-menu-item>
             </el-menu>
             <div class="current-user">
                 <i class="el-icon-user-solid"></i>
