@@ -1,12 +1,10 @@
 <template>
     <div>
- 
         <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <span>Sentences</span>
                 <!-- <el-button style="float: right; padding: 3px 0" type="text">Add</el-button> -->
             </div>
-
             <div>
                 <div class="text item">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit
@@ -19,7 +17,7 @@
         <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <span>Symbols</span>
-                <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+                <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
             </div>
             <div>
                 <div class="text item">
@@ -42,7 +40,7 @@
         <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <span>Images</span>
-                <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+                <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
             </div>
             <div>
                 <el-row>
@@ -78,8 +76,6 @@
                             <div style="padding: 14px;">
                                 <span>Delicious food</span>
                                 <div class="bottom clearfix">
-                                <!-- <time class="time">{{ currentDate }}</time> -->
-                                <!-- <el-button type="text" class="button">Action</el-button> -->
                                 </div>
                             </div>
                         </el-card>
@@ -90,7 +86,7 @@
         <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <span>Songs</span>
-                <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+                <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
             </div>
             <div class="text item">
                 <h4>Sample MP3</h4>
@@ -98,6 +94,20 @@
                     <source src="../assets/sample.mp3" type="audio/mpeg">
                     Your browser does not support the audio tag.
                 </audio>
+                
+            </div>
+        </el-card>
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span>UML for Language Data Types</span>
+                <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
+            </div>
+            <div class="text item">
+                <div class="demo-image__placeholder">
+                    <div class="block">
+                        <img src="@/assets/language_data_UML.png" class="image">
+                    </div>
+                </div>
                 
             </div>
         </el-card>
@@ -110,7 +120,7 @@ export default {
     name: 'EnglishStatic',
     data() {
         return {
-            currentDate: new Date()
+            currentDate: new Date(),
         };
     },
     methods: {
