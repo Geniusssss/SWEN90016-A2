@@ -2,8 +2,28 @@
   "posts": [
     {
       "id": 1,
-      "title": "json-server",
-      "author": "typicode"
+      "title": "Indigenous Dhudhuroa Language",
+      "author": "icode"
+    },
+    {
+      "id": 2,
+      "title": "English Language - Dynamic Demonstration Example",
+      "author": "typice"
+    },
+    {
+      "id": 3,
+      "title": "English Language - Static Example",
+      "author": "tyde"
+    },
+    {
+      "id": 4,
+      "title": "Indigenous Community Knowledge",
+      "author": "tyde"
+    },
+    {
+      "id": 5,
+      "title": "Culturally Relevant Perspective",
+      "author": "tyde"
     }
   ],
   "comments": [

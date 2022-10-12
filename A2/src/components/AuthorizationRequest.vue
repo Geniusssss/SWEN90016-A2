@@ -19,10 +19,11 @@
               <el-input v-model="form.name" autocomplete="off"></el-input>
               </el-form-item> -->
                         <el-form-item label="Access Type:" :label-width="formLabelWidth">
-                            <el-select v-model="form.region" placeholder="Please select your access type">
-                                <el-option label="READ ONLY" value="read"></el-option>
-                                <el-option label="WRITE ONLY" value="write"></el-option>
-                                <el-option label="FULL ACCESS" value="full"></el-option>
+                            <el-select v-model="form.accessType" placeholder="Please select your access type">
+                                <el-option label="CREATE" value="CREATE"></el-option>
+                                <el-option label="READ" value="READ"></el-option>
+                                <el-option label="UPDATE" value="UPDATE"></el-option>
+                                <el-option label="DELETE" value="DELETE"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-form>
@@ -45,15 +46,15 @@ export default {
             user: '',
             options: [
                 {
-                    value: 'item-1',
+                    value: 'ENG_LANG_STATIC_EXAMPLE',
                     label: 'English Language - Static Example'
                 },
                 {
-                    value: 'item-2',
+                    value: 'INDIGENOUS_DHUDHUROA_LANG',
                     label: 'Indigenous Dhudhuroa Language'
                 },
                 {
-                    value: 'item-3',
+                    value: 'ENG_LANG_DYNAMIC_DEMO_EXAMPLE',
                     label: 'English Language - Dynamic Demonstration Example'
                 },
             ],
@@ -61,13 +62,7 @@ export default {
             dialogFormVisible: false,
             form: {
                 name: '',
-                region: '',
-                date1: '',
-                date2: '',
-                delivery: false,
-                type: [],
-                resource: '',
-                desc: ''
+                accessType: '',
             },
             formLabelWidth: '120px'
         }
@@ -108,9 +103,51 @@ export default {
         },
         requestPageAccess() {
             this.dialogFormVisible = false;
-            this.$message("Request submitted!")
+            // this.$message("Request submitted!")
             // Implement the request access logic here
             // Add the request info to DB 
+                    // Add the request info to DB
+
+            let axios = require('axios');
+            let data = JSON.stringify({
+                "collection": "requestAccessToDynamicDemonstrationExample",
+                "database": "mymongo",
+                "dataSource": "Cluster0",
+                "document": {
+                "username": this.user.username,
+                "content_type": this.selectedRestrictedLangPage,
+                "permission_type": this.form.accessType,
+                "granted": false,
+                "createdAt": new Date()
+                }
+                // "projection": {
+                //     "_id": 1
+                // }
+            });
+                        
+            let config = {
+                method: 'post',
+                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/insertOne',
+                headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Request-Headers': '*',
+                'api-key': 'alJbGe2FTUy9nKCQiZOgQIQR6y5X28uDGjPW5EM76XnSjG9Hyneag4xe5gT8cnkg',
+                },
+                data: data
+            };
+                        
+            axios(config)
+            .then((response) => {
+                console.log(JSON.stringify(response.data));
+                // alert(JSON.stringify(response.data));
+                this.$message("Request submitted! Insertion ID: " +
+                JSON.stringify(response.data).toString());
+            })
+            .catch((error) => {
+                // this.$message("")
+                console.log(error);
+            });
+
         }
 
     }
