@@ -1,8 +1,8 @@
 <template>
     <el-container>
-        <el-header>Home</el-header>
+        <el-header>Permission Restricted Pages Access</el-header>
         <el-main>
-            <h1>Nice to see you back, user {{this.user.username}}!</h1>
+            <h1>Hi user {{this.user.username}}, Please select the page you want to access!</h1>
             <div class="block">
                 <span class="demonstration">Restricted Languages Pages</span>
                 <el-select v-model="selectedRestrictedLangPage" placeholder="Select">
