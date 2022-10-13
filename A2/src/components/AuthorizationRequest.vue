@@ -1,8 +1,8 @@
 <template>
     <el-container>
-        <el-header>Home</el-header>
+        <el-header>Permission Restricted Pages Access</el-header>
         <el-main>
-            <h1>Nice to see you back, user {{this.user.username}}!</h1>
+            <h1>Hi user {{this.user.username}}, Please select the page you want to access!</h1>
             <div class="block">
                 <span class="demonstration">Restricted Languages Pages</span>
                 <el-select v-model="selectedRestrictedLangPage" placeholder="Select">
@@ -44,6 +44,7 @@ export default {
     data() {
         return {
             user: '',
+            userDB: '',
             options: [
                 {
                     value: 'ENG_LANG_STATIC_EXAMPLE',
@@ -69,15 +70,26 @@ export default {
     },
     created() {
         this.getCurrentUser();
+        this.requestUserData();
     },
     methods: {
+        routerTo(path) {
+            this.$router.push(path)
+        },
         getCurrentUser() {
             var result = JSON.parse(localStorage.getItem("currentUser") || '[]');
             this.user = result;
         },
         accessRestritedLangPage() {
-            if (this.checkIfUserhaveAccess()) {
-                alert("You do have access to the page!")
+            if (this.checkIfUserhaveAccess(this.selectedRestrictedLangPage)) {
+                // alert("You do have access to the page!");
+                if (this.selectedRestrictedLangPage === 'ENG_LANG_STATIC_EXAMPLE') {
+                    this.routerTo('/home/englishstatic');
+                } else if (this.selectedRestrictedLangPage === 'INDIGENOUS_DHUDHUROA_LANG') {
+                    this.routerTo('/home/indigenousdl');
+                } else {
+                    this.routerTo('/home/englishdynamic');
+                }
             }
             else {
                 // if do not have access to the page, pop up a window with 2 buttons
@@ -98,8 +110,63 @@ export default {
                 );
             }
         },
-        checkIfUserhaveAccess() {
+        checkIfUserhaveAccess(selectedPage) {
+            if (selectedPage === 'ENG_LANG_STATIC_EXAMPLE') {
+                return true;
+            } else {
+                // let userData = this.requestUserData();
+                this.$message(this.userDB._id);
+                if (selectedPage === 'INDIGENOUS_DHUDHUROA_LANG' &&
+                    this.userDB.idlAccess) {
+                    return true;
+                } else if (selectedPage === 'ENG_LANG_DYNAMIC_DEMO_EXAMPLE') {
+                    if (this.userDB.ddeAccess.create ||
+                        this.userDB.ddeAccess.read ||
+                        this.userDB.ddeAccess.write ||
+                        this.userDB.ddeAccess.delete) {
+                        return true;
+                        }
+                } else {
+                    return false;
+                }
+            }
             return false;
+        },
+        requestUserData() {
+            // let username = row.username;
+            let axios = require('axios');
+            let data = JSON.stringify({
+                "collection": "users",
+                "database": "mymongo",
+                "dataSource": "Cluster0",
+                "filter": {
+                    "username": this.user.username,
+                },
+            });
+                        
+            let config = {
+                method: 'post',
+                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/findOne',
+                headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Request-Headers': '*',
+                'api-key': 'alJbGe2FTUy9nKCQiZOgQIQR6y5X28uDGjPW5EM76XnSjG9Hyneag4xe5gT8cnkg',
+                },
+                data: data
+            };
+                        
+            axios(config)
+                .then((response) => {
+                    console.log("Got here --- requestFindUser");
+                    console.log(JSON.stringify(response.data.document));
+                    this.userDB = response.data.document;
+                    // this.$message( response.data.document);
+                    // this.requestUpdateUserPageAccess(row, response.data.document)
+            })
+            .catch((error) => {
+                // this.$message("")
+                console.log(error);
+            });
         },
         requestPageAccess() {
             this.dialogFormVisible = false;
