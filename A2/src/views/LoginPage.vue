@@ -59,7 +59,7 @@ export default {
                         });
                     } else {
                         this.$router.push({
-                            path: '/home',
+                            path: '/home/start',
                             query: {
                                 user: this.user
                             }
