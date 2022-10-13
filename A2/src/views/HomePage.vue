@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-col :span="4">
+        <el-col :span="4" :offset="4">
             <el-menu :router="true">
                 <img class="logo" src="../assets/logo.webp">
                 <el-menu-item index="/home/request">
@@ -43,7 +43,7 @@
                 <el-button icon="el-icon-switch-button" circle size="mini" @click="logout"></el-button>
             </div>
         </el-col>
-        <el-col :span="18">
+        <el-col :span="12">
             <router-view></router-view>
         </el-col>
     </div>
