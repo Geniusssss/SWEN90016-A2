@@ -3,6 +3,10 @@
         <el-col :span="4">
             <el-menu :router="true">
                 <img class="logo" src="../assets/logo.webp">
+                <el-menu-item index="/home/start">
+                    <i class="el-icon-s-home"></i>
+                    <span slot="title">Home</span>
+                </el-menu-item>
                 <el-menu-item index="/home/request">
                     <i class="el-icon-upload2"></i>
                     <span slot="title">Authorization Request</span>

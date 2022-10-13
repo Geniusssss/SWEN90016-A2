@@ -15,6 +15,7 @@ import TextSearching from "../components/TextSearching"
 import UserGroup from "../components/UserGroup"
 import AuthorizationAdmin from "../components/AuthorizationAdmin"
 import AccessManagement from "../components/AccessManagement"
+import HomeStartPage from "../components/HomeStartPage";
 
 import Vue from 'vue'
 
@@ -46,7 +47,12 @@ export default new VueRouter({
             path: '/home',
             name: 'HomePage',
             component: HomePage,
-            children:[
+            children: [
+                {
+                    path: '/home/start',
+                    name: 'start',
+                    component: HomeStartPage,
+                },
                 {
                     path: '/home/request',
                     name: 'Request',
