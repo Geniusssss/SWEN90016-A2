@@ -1,6 +1,6 @@
 <template>
     <form class="form">
-        <el-page-header @back="routerTo('/')" content="Login" title="Back">
+        <el-page-header @back="routerTo('/')" content="Log in" title="Back">
         </el-page-header>
         <div class="container">
             <div id="textblock">Log in to your account</div>
@@ -9,7 +9,7 @@
             <input type="text" placeholder="Enter username" required v-model="username">
             <label for="psw" class="littletext"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" required v-model="pswd">
-            <el-button type="primary" class="button" @click="validation">Login</el-button>
+            <el-button type="primary" native-type="submit" class="button" @click="validation">Log in</el-button>
         </div>
     </form>
 </template>
@@ -50,19 +50,17 @@ export default {
                 })
                 if (result) {
                     localStorage.setItem("currentUser", JSON.stringify(this.user));
+                    this.$message({
+                        type: 'success',
+                        message: 'Logged in!'
+                    });
                     if (this.user.isAdmin) {
                         this.$router.push({
-                            path: '/admin-home',
-                            query: {
-                                user: this.user
-                            }
+                            path: '/admin-home/usergroup',
                         });
                     } else {
                         this.$router.push({
                             path: '/home/start',
-                            query: {
-                                user: this.user
-                            }
                         });
                     }
                 }

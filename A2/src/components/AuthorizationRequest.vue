@@ -1,41 +1,43 @@
 <template>
-    <el-container>
-        <el-header>Permission Restricted Pages Access</el-header>
-        <el-main>
-            <h1>Hi user {{this.user.username}}, Please select the page you want to access!</h1>
-            <div class="block">
-                <span class="demonstration">Restricted Languages Pages</span>
-                <el-select v-model="selectedRestrictedLangPage" placeholder="Select">
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                    </el-option>
-                </el-select>
-                <el-button class="button" @click="accessRestritedLangPage">Go</el-button>
-            </div>
-
-            <div>
-                <el-dialog title="Request Form" :visible.sync="dialogFormVisible">
-                    <el-form :model="form">
-                        <!-- <el-form-item label="Access Item name" :label-width="formLabelWidth">
-              <el-input v-model="form.name" autocomplete="off"></el-input>
-              </el-form-item> -->
-                        <el-form-item label="Access Type:" :label-width="formLabelWidth">
-                            <el-select v-model="form.accessType" placeholder="Please select your access type">
-                                <el-option label="CREATE" value="CREATE"></el-option>
-                                <el-option label="READ" value="READ"></el-option>
-                                <el-option label="UPDATE" value="UPDATE"></el-option>
-                                <el-option label="DELETE" value="DELETE"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-form>
-                    <div slot="footer" class="dialog-footer">
-                        <el-button @click="dialogFormVisible = false">Cancel</el-button>
-                        <el-button type="primary" @click="requestPageAccess">Submit Request</el-button>
-                    </div>
-                </el-dialog>
-            </div>
-        </el-main>
-        <!-- <el-footer>Footer</el-footer> -->
-    </el-container>
+    <div>
+        <div class="title">Permission Restricted Pages Access and Authorization Management</div>
+        <div class="title2">Hi {{this.user.username}}, please select the page you want to access!</div>
+        <div style="margin-left: 50px;">
+            <el-select v-model="selectedRestrictedLangPage" placeholder="Select" style="width: 400px;">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+            </el-select>
+            <el-button type="primary" plain style="margin-left: 10px; width: 70px;" @click="accessRestritedLangPage">Go
+            </el-button>
+        </div>
+        <div>
+            <el-dialog title="Request Access" top="30vh" width="40%" :close-on-click-modal="false"
+                :visible.sync="dialogFormVisible">
+                <div style="margin-left: 10%; margin-bottom: 30px;">
+                    <div>READ: Have Access to view this page</div>
+                    <div>CREATE: Have Access to upload to this page</div>
+                    <div>DOWNLOAD: Have Access to download data on this page</div>
+                    <div>DELETE: Have Access to delete data on this page</div>
+                    <div style="margin-top: 20px;">Request READ access before requesting other accesses</div>
+                </div>
+                <el-form style="margin-left: 10%;" :model="form">
+                    <el-form-item label="Access Type:">
+                        <el-select style="width: 300px;" v-model="form.accessType"
+                            placeholder="Please select your access type">
+                            <el-option label="READ" value="READ"></el-option>
+                            <el-option label="CREATE" value="CREATE"></el-option>
+                            <el-option label="DOWNLOAD" value="DOWNLOAD"></el-option>
+                            <el-option label="DELETE" value="DELETE"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="dialogFormVisible = false">Cancel</el-button>
+                    <el-button type="primary" @click="requestPageAccess">Submit Request</el-button>
+                </div>
+            </el-dialog>
+        </div>
+    </div>
 </template>
   
 <script>
@@ -44,7 +46,6 @@ export default {
     data() {
         return {
             user: '',
-            userDB: '',
             options: [
                 {
                     value: 'ENG_LANG_STATIC_EXAMPLE',
@@ -65,12 +66,10 @@ export default {
                 name: '',
                 accessType: '',
             },
-            formLabelWidth: '120px'
         }
     },
     created() {
         this.getCurrentUser();
-        this.requestUserData();
     },
     methods: {
         routerTo(path) {
@@ -81,140 +80,125 @@ export default {
             this.user = result;
         },
         accessRestritedLangPage() {
-            if (this.checkIfUserhaveAccess(this.selectedRestrictedLangPage)) {
-                // alert("You do have access to the page!");
-                if (this.selectedRestrictedLangPage === 'ENG_LANG_STATIC_EXAMPLE') {
-                    this.routerTo('/home/englishstatic');
-                } else if (this.selectedRestrictedLangPage === 'INDIGENOUS_DHUDHUROA_LANG') {
+            if (this.selectedRestrictedLangPage == '') {
+                this.$message("Please select a page");
+                return;
+            }
+            if (this.selectedRestrictedLangPage == 'ENG_LANG_STATIC_EXAMPLE') {
+                this.routerTo('/home/englishstatic');
+            }
+            if (this.selectedRestrictedLangPage == 'INDIGENOUS_DHUDHUROA_LANG') {
+                if (this.user.idlAccess) {
                     this.routerTo('/home/indigenousdl');
                 } else {
-                    this.routerTo('/home/englishdynamic');
-                }
-            }
-            else {
-                // if do not have access to the page, pop up a window with 2 buttons
-                // 1st button: Request Access; 2nd button: cancel
-                this.$alert('You do not have access to the specified page!'
-                    , 'Request access to the page?',
-                    {
-                        // confirmButtonText: 'confirm',
-                        // cancelButtonText: 'Cancel',
-                        showConfirmButton: true,
-                        showCancelButton: true,
-                    }
-                ).then(() => {
-                    // alert("You got here");
-                    this.dialogFormVisible = true;
-                    // this.requestPageAccess();
-                }
-                );
-            }
-        },
-        checkIfUserhaveAccess(selectedPage) {
-            if (selectedPage === 'ENG_LANG_STATIC_EXAMPLE') {
-                return true;
-            } else {
-                // let userData = this.requestUserData();
-                this.$message(this.userDB._id);
-                if (selectedPage === 'INDIGENOUS_DHUDHUROA_LANG' &&
-                    this.userDB.idlAccess) {
-                    return true;
-                } else if (selectedPage === 'ENG_LANG_DYNAMIC_DEMO_EXAMPLE') {
-                    if (this.userDB.ddeAccess.create ||
-                        this.userDB.ddeAccess.read ||
-                        this.userDB.ddeAccess.write ||
-                        this.userDB.ddeAccess.delete) {
-                        return true;
+                    this.$alert('Request access to this page?'
+                        , 'You do not have access to this page!',
+                        {
+                            showConfirmButton: true,
+                            showCancelButton: true,
                         }
-                } else {
-                    return false;
+                    ).then(() => {
+                        let axios = require('axios');
+                        let data = JSON.stringify({
+                            "collection": "requestAccessToDynamicDemonstrationExample",
+                            "database": "mymongo",
+                            "dataSource": "Cluster0",
+                            "document": {
+                                "username": this.user.username,
+                                "content_type": this.selectedRestrictedLangPage,
+                                "permission_type": '',
+                                "granted": false,
+                                "createdAt": new Date()
+                            }
+                        });
+                        let config = {
+                            method: 'post',
+                            url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/insertOne',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Access-Control-Request-Headers': '*',
+                                'api-key': 'alJbGe2FTUy9nKCQiZOgQIQR6y5X28uDGjPW5EM76XnSjG9Hyneag4xe5gT8cnkg',
+                            },
+                            data: data
+                        };
+                        axios(config)
+                            .then((response) => {
+                                console.log(response);
+                                this.$message({
+                                    type: 'success',
+                                    message: 'Request submitted!'
+                                });
+                                return;
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            });
+                    });
                 }
             }
-            return false;
-        },
-        requestUserData() {
-            // let username = row.username;
-            let axios = require('axios');
-            let data = JSON.stringify({
-                "collection": "users",
-                "database": "mymongo",
-                "dataSource": "Cluster0",
-                "filter": {
-                    "username": this.user.username,
-                },
-            });
-                        
-            let config = {
-                method: 'post',
-                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/findOne',
-                headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Request-Headers': '*',
-                'api-key': 'alJbGe2FTUy9nKCQiZOgQIQR6y5X28uDGjPW5EM76XnSjG9Hyneag4xe5gT8cnkg',
-                },
-                data: data
-            };
-                        
-            axios(config)
-                .then((response) => {
-                    console.log("Got here --- requestFindUser");
-                    console.log(JSON.stringify(response.data.document));
-                    this.userDB = response.data.document;
-                    // this.$message( response.data.document);
-                    // this.requestUpdateUserPageAccess(row, response.data.document)
-            })
-            .catch((error) => {
-                // this.$message("")
-                console.log(error);
-            });
+            if (this.selectedRestrictedLangPage == 'ENG_LANG_DYNAMIC_DEMO_EXAMPLE') {
+                if (this.user.ddeAccess.read) {
+                    this.$confirm('You can go to this page or request other accesses'
+                        , 'You have access to this page!',
+                        {
+                            cancelButtonText: 'Go to page',
+                            confirmButtonText: 'Request access',
+                        }
+                    ).then(() => {
+                        this.dialogFormVisible = true;
+                    }).catch(() => {
+                        this.routerTo('/home/englishdynamic');
+                    });
+                } else {
+                    this.$alert('Request access to this page?'
+                        , 'You do not have access to this page!',
+                        {
+                            showConfirmButton: true,
+                            showCancelButton: true,
+                        }
+                    ).then(() => {
+                        this.dialogFormVisible = true;
+                    });
+                }
+            }
+
         },
         requestPageAccess() {
             this.dialogFormVisible = false;
-            // this.$message("Request submitted!")
-            // Implement the request access logic here
-            // Add the request info to DB 
-                    // Add the request info to DB
-
             let axios = require('axios');
             let data = JSON.stringify({
                 "collection": "requestAccessToDynamicDemonstrationExample",
                 "database": "mymongo",
                 "dataSource": "Cluster0",
                 "document": {
-                "username": this.user.username,
-                "content_type": this.selectedRestrictedLangPage,
-                "permission_type": this.form.accessType,
-                "granted": false,
-                "createdAt": new Date()
+                    "username": this.user.username,
+                    "content_type": this.selectedRestrictedLangPage,
+                    "permission_type": this.form.accessType,
+                    "granted": false,
+                    "createdAt": new Date()
                 }
-                // "projection": {
-                //     "_id": 1
-                // }
             });
-                        
             let config = {
                 method: 'post',
                 url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/insertOne',
                 headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Request-Headers': '*',
-                'api-key': 'alJbGe2FTUy9nKCQiZOgQIQR6y5X28uDGjPW5EM76XnSjG9Hyneag4xe5gT8cnkg',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Request-Headers': '*',
+                    'api-key': 'alJbGe2FTUy9nKCQiZOgQIQR6y5X28uDGjPW5EM76XnSjG9Hyneag4xe5gT8cnkg',
                 },
                 data: data
             };
-                        
             axios(config)
-            .then((response) => {
-                console.log(JSON.stringify(response.data));
-                // alert(JSON.stringify(response.data));
-                this.$message("Request submitted! Insertion ID: " +
-                JSON.stringify(response.data).toString());
-            })
-            .catch((error) => {
-                // this.$message("")
-                console.log(error);
-            });
-
+                .then((response) => {
+                    console.log(JSON.stringify(response.data));
+                    this.$message({
+                        type: 'success',
+                        message: 'Request submitted!'
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         }
 
     }
@@ -222,6 +206,30 @@ export default {
 </script>
   
 <style scoped>
+.title {
+    margin: 50px;
+    width: 1096px;
+    height: 66px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 550;
+    font-size: 30px;
+    line-height: 38px;
+    color: #101828;
+}
+
+.title2 {
+    margin-left: 50px;
+    width: 1096px;
+    height: 66px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 38px;
+    color: #101828;
+}
+
 .el-header,
 .el-footer {
     background-color: #B3C0D1;

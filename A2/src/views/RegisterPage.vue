@@ -10,7 +10,7 @@
             <input type="password" placeholder="Enter Password" required v-model="pswd">
             <label for="psw" class="littletext"><b>Confirm Password</b></label>
             <input type="password" placeholder="Enter Password Again" required v-model="pswd2">
-            <el-button type="primary" class="button" @click="register">Register</el-button>
+            <el-button type="primary" native-type="submit" class="button" @click="register">Register</el-button>
         </div>
     </form>
 </template>
@@ -22,7 +22,7 @@ export default {
             username: '',
             pswd: '',
             pswd2: '',
-            user: { username: '', pswd: '', isAdmin: false, idlAccess: false, ddeAccess: { create: false, read: false, write: false, delete: false } },
+            user: { username: '', pswd: '', isAdmin: false, idlAccess: false, ddeAccess: { create: false, read: false, download: false, delete: false } },
             allUsers: [],
         }
     },

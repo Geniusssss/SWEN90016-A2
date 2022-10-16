@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="title">Group Management</div>
+        <div class="title">User Group Management</div>
         <el-button class="create-group" type="primary" plain @click="createGroup">Create a Group</el-button>
-        <div v-if="allGroupMembers != ''">
+        <div v-loading="loading">
             <el-tabs class="tabs" type="border-card" v-model="defaultTab">
                 <el-tab-pane v-for="group in allGroupMembers" :key="group.groupName" :label="group.groupName"
                     :name="group.groupName">
@@ -26,6 +26,7 @@ export default {
             allUsers: '',
             allUsersData: [],
             allGroupMembers: [],
+            loading: false,
         }
     },
     created() {
@@ -46,6 +47,7 @@ export default {
                 }
                 this.allGroupMembers.push(groupMembers);
             }
+            this.loading = false;
         },
         createGroup() {
             this.$prompt('Input Group Name:', 'Create a New Group', {
@@ -142,6 +144,7 @@ export default {
                 });
         },
         getGroups() {
+            this.loading = true;
             let axios = require('axios');
             let data = JSON.stringify({
                 "collection": "userGroup",
@@ -207,7 +210,7 @@ export default {
     height: 66px;
     font-family: 'Inter';
     font-style: normal;
-    font-weight: 500;
+    font-weight: 550;
     font-size: 30px;
     line-height: 38px;
     color: #101828;
