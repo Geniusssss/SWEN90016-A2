@@ -46,7 +46,7 @@
                 </el-menu-item>
             </el-menu>
             <div class="current-user">
-                <i class="el-icon-user-solid"></i>
+                <i class="el-icon-s-custom"></i>
                 <div class="user-name">{{user.username}}</div>
                 <el-button icon="el-icon-switch-button" circle size="mini" @click="logout"></el-button>
             </div>
@@ -104,7 +104,7 @@ export default {
 .logo {
     margin-top: 30px;
     margin-bottom: 30px;
-    margin-left: 30%;
+    margin-left: 35%;
     width: 30%;
     height: 30%;
 }
@@ -119,7 +119,7 @@ export default {
 
 .user-name {
     padding-left: 15px;
-    padding-right: 100px;
+    padding-right: 30px;
     color: #5c5c5c;
     font-size: 16px;
     margin: 0;

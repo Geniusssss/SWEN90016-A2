@@ -165,7 +165,7 @@ export default {
 }
 
 .form {
-    border: 300px solid #fff;
+    border: 200px solid #fff;
     margin: auto;
     padding: 200px rgb(150, 58, 58);
     width: 400px;

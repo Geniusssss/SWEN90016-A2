@@ -13,14 +13,14 @@
         <div>
             <el-dialog title="Request Access" top="30vh" width="40%" :close-on-click-modal="false"
                 :visible.sync="dialogFormVisible">
-                <div style="margin-left: 10%; margin-bottom: 30px;">
+                <div style="margin-left: 20%; margin-bottom: 30px;">
                     <div>READ: Have Access to view this page</div>
                     <div>CREATE: Have Access to upload to this page</div>
                     <div>DOWNLOAD: Have Access to download data on this page</div>
                     <div>DELETE: Have Access to delete data on this page</div>
                     <div style="margin-top: 20px;">Request READ access before requesting other accesses</div>
                 </div>
-                <el-form style="margin-left: 10%;" :model="form">
+                <el-form style="margin-left: 20%;" :model="form">
                     <el-form-item label="Access Type:">
                         <el-select style="width: 300px;" v-model="form.accessType"
                             placeholder="Please select your access type">

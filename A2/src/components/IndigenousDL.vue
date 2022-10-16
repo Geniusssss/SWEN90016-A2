@@ -4,7 +4,7 @@
             <div class="title">Indigenous Dhudhuroa Language</div>
             <div v-loading="loading">
                 <div class="row">
-                    <el-select v-model="optionValue" clearable placeholder="Select data type to upload">
+                    <el-select style="width: 250px;" v-model="optionValue" clearable placeholder="Select data type to upload">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
@@ -155,7 +155,6 @@ export default {
                 });
         },
         handleUpload(uploadFile) {
-            this.loading = true;
             var fileType = this.optionValue;
             var fileSize = uploadFile.size;
             var fileName = uploadFile.name;
@@ -194,6 +193,8 @@ export default {
                 return;
             }
 
+            this.loading = true;
+            
             if ((fileType == 'Sentence') || (fileType == 'Symbol')) {
                 var reader1 = new FileReader();
                 reader1.readAsText(uploadFile.raw, 'utf-8');

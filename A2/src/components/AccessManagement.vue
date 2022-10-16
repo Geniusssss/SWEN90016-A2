@@ -14,20 +14,20 @@
                 </div>
             </div>
         </div>
-        <div style="width: 1200px;" v-loading="loading"></div>
+        <div style="width: 1100px;" v-loading="loading"></div>
         <div class="user-list">
             <div v-for="user in allUsers" :key="user.username">
                 <div class="row-section-2">
-                    <i class="el-icon-user-solid"></i>
+                    <i class="el-icon-user"></i>
                     <div class="user-name">{{user.username}}</div>
-                    <el-switch v-model="user.idlAccess" style="margin-left: 60px;" @change="update(user)"></el-switch>
-                    <el-switch v-model="user.ddeAccess.read" style="margin-left: 282px;" @change="update(user)">
+                    <el-switch v-model="user.idlAccess" style="margin-left: 30px;" @change="update(user)"></el-switch>
+                    <el-switch v-model="user.ddeAccess.read" style="margin-left: 252px;" @change="update(user)">
                     </el-switch>
-                    <el-switch v-model="user.ddeAccess.create" style="margin-left: 100px;" @change="update(user)"
+                    <el-switch v-model="user.ddeAccess.create" style="margin-left: 95px;" @change="update(user)"
                         :disabled="!user.ddeAccess.read"></el-switch>
-                    <el-switch v-model="user.ddeAccess.download" style="margin-left: 120px;" @change="update(user)"
+                    <el-switch v-model="user.ddeAccess.download" style="margin-left: 111px;" @change="update(user)"
                         :disabled="!user.ddeAccess.read"></el-switch>
-                    <el-switch v-model="user.ddeAccess.delete" style="margin-left: 120px;" @change="update(user)"
+                    <el-switch v-model="user.ddeAccess.delete" style="margin-left: 110px;" @change="update(user)"
                         :disabled="!user.ddeAccess.read"></el-switch>
                 </div>
             </div>

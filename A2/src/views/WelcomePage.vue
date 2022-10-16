@@ -11,7 +11,7 @@
             </el-col>
         </el-row>
         <div>
-            <el-carousel indicator-position="outside" height="600px">
+            <el-carousel indicator-position="outside" height="650px">
                 <el-carousel-item v-for="item in backgrouds" :key="item">
                     <img class="picture" :src="item.path">
                 </el-carousel-item>
