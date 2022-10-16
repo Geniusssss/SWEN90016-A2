@@ -5,12 +5,12 @@
         <div class="container">
             <div id="textblock">Register Your Account</div>
             <label for="uname" class="littletext"><b>Username</b></label>
-            <input type="text" placeholder="Enter username" required v-model="username">
+            <input type="text" placeholder="Enter username" v-model="username">
             <label for="psw" class="littletext"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" required v-model="pswd">
+            <input type="password" placeholder="Enter Password" v-model="pswd">
             <label for="psw" class="littletext"><b>Confirm Password</b></label>
-            <input type="password" placeholder="Enter Password Again" required v-model="pswd2">
-            <el-button type="primary" native-type="submit" class="button" @click="register">Register</el-button>
+            <input type="password" placeholder="Enter Password Again" v-model="pswd2">
+            <el-button type="primary" class="button" @click="register">Register</el-button>
         </div>
     </form>
 </template>
@@ -36,15 +36,21 @@ export default {
         register() {
             {
                 if (this.username == "") {
-                    alert("Please enter your username");
+                    this.$alert('Please enter your username', {
+                        confirmButtonText: 'Close',
+                    });
                     return
                 }
                 if (this.pswd == "") {
-                    alert("Please enter your password");
+                    this.$alert('Please enter your password', {
+                        confirmButtonText: 'Close',
+                    });
                     return
                 }
                 if (this.pswd != this.pswd2) {
-                    alert("Please confirm your password");
+                    this.$alert('Please confirm your password', {
+                        confirmButtonText: 'Close',
+                    });
                     return
                 }
                 var duplicate = this.allUsers.some(item => {
@@ -53,7 +59,9 @@ export default {
                     }
                 })
                 if (duplicate) {
-                    alert("User already exists");
+                    this.$alert('User already exists', {
+                        confirmButtonText: 'Close',
+                    });
                     return
                 }
                 this.addUser();
@@ -80,7 +88,10 @@ export default {
             axios(config)
                 .then((response) => {
                     console.log(response.data.documents);
-                    alert("Registered!");
+                    this.$message({
+                        type: 'success',
+                        message: 'Registered!',
+                    });
                     this.$router.push("/login");
                 })
                 .catch((error) => {

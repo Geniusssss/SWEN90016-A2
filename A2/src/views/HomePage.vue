@@ -1,7 +1,7 @@
 <template>
     <div v-if="user != ''">
         <el-col :span="6">
-            <el-menu :router="true" default-active="/home/start">
+            <el-menu :router="true" :default-active="this.$route.path">
                 <img class="logo" src="../assets/logo.png">
                 <el-menu-item index="/home/start">
                     <i class="el-icon-s-home"></i>
@@ -66,6 +66,9 @@ export default {
             user: '',
         }
     },
+    created() {
+        this.getCurrentUser();
+    },
     methods: {
         routerTo(path) {
             this.$router.push(path)
@@ -93,9 +96,6 @@ export default {
                 });
             });
         }
-    },
-    created() {
-        this.getCurrentUser();
     },
 }
 </script>

@@ -77,7 +77,37 @@ export default {
         },
         getCurrentUser() {
             var result = JSON.parse(localStorage.getItem("currentUser") || '[]');
-            this.user = result;
+
+            let axios = require('axios');
+            let data = JSON.stringify({
+                "collection": "users",
+                "database": "mymongo",
+                "dataSource": "Cluster0",
+                "filter": {
+                    "username": result.username,
+                    "pswd": result.pswd,
+                },
+            });
+            let config = {
+                method: 'post',
+                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/findOne',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Request-Headers': '*',
+                    'api-key': 'alJbGe2FTUy9nKCQiZOgQIQR6y5X28uDGjPW5EM76XnSjG9Hyneag4xe5gT8cnkg',
+                },
+                data: data
+            };
+            axios(config)
+                .then((response) => {
+                    console.log(response.data.document);
+                    this.user = response.data.document
+                    console.log(this.user);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    this.user = result;
+                });
         },
         accessRestritedLangPage() {
             if (this.selectedRestrictedLangPage == '') {

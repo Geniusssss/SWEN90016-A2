@@ -1,7 +1,7 @@
 <template>
     <div v-if="user.isAdmin">
         <el-col :span="6">
-            <el-menu :router="true" default-active="/admin-home/usergroup">
+            <el-menu :router="true" :default-active="this.$route.path">
                 <img class="logo" src="../assets/logo.png">
                 <el-menu-item index="/admin-home/usergroup">
                     <i class="el-icon-document"></i>
@@ -41,6 +41,9 @@ export default {
             user: '',
         }
     },
+    created() {
+        this.getCurrentUser();
+    },
     methods: {
         routerTo(path) {
             this.$router.push(path)
@@ -67,10 +70,7 @@ export default {
                     message: 'Cancelled'
                 });
             });
-        }
-    },
-    created() {
-        this.getCurrentUser();
+        },
     },
 }
 </script>

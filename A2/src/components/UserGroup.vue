@@ -21,7 +21,7 @@ export default {
     data() {
         return {
             defaultTab: 'Group 1',
-            newGroup: { groupName: '', users: [] },
+            newGroup: { groupName: '', users: [], groupData: [] },
             allGroups: '',
             allUsers: '',
             allUsersData: [],
@@ -77,9 +77,10 @@ export default {
                 "dataSource": "Cluster0",
                 "filter": { "groupName": group.groupName },
                 "update": {
-                    "groupName": group.groupName,
-                    "users": group.value,
-                }
+                    "$set": {
+                        "users": group.value,
+                    }
+                },
             });
             let config = {
                 method: 'post',
@@ -98,7 +99,8 @@ export default {
                     this.allUsers = '';
                     this.allUsersData = [];
                     this.allGroupMembers = [];
-                    this.getGroups();
+                    this.newGroup = { groupName: '', users: [], groupData: [] },
+                        this.getGroups();
                     this.$message({
                         type: 'success',
                         message: 'Update Successfully!',
@@ -137,7 +139,8 @@ export default {
                     this.allUsers = '';
                     this.allUsersData = [];
                     this.allGroupMembers = [];
-                    this.getGroups();
+                    this.newGroup = { groupName: '', users: [], groupData: [] },
+                        this.getGroups();
                 })
                 .catch((error) => {
                     console.log(error);

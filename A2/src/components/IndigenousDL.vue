@@ -1,5 +1,5 @@
 <template>
-    <div class="column">
+    <div v-if="user" class="column">
         <div v-if="user.idlAccess">
             <div class="title">Indigenous Dhudhuroa Language</div>
             <div v-loading="loading">
@@ -57,11 +57,10 @@
 </template>
 
 <script>
-import { Loading } from 'element-ui';
 export default {
     name: 'IndigenousDL',
     created() {
-        this.user = JSON.parse(localStorage.getItem("currentUser") || '[]');
+        this.getCurrentUser();
         this.getData();
     },
     data() {
@@ -88,6 +87,40 @@ export default {
     methods: {
         routerTo(path) {
             this.$router.push(path)
+        },
+        getCurrentUser() {
+            var result = JSON.parse(localStorage.getItem("currentUser") || '[]');
+
+            let axios = require('axios');
+            let data = JSON.stringify({
+                "collection": "users",
+                "database": "mymongo",
+                "dataSource": "Cluster0",
+                "filter": {
+                    "username": result.username,
+                    "pswd": result.pswd,
+                },
+            });
+            let config = {
+                method: 'post',
+                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/findOne',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Request-Headers': '*',
+                    'api-key': 'alJbGe2FTUy9nKCQiZOgQIQR6y5X28uDGjPW5EM76XnSjG9Hyneag4xe5gT8cnkg',
+                },
+                data: data
+            };
+            axios(config)
+                .then((response) => {
+                    console.log(response.data.document);
+                    this.user = response.data.document
+                    console.log(this.user);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    this.user = result;
+                });
         },
         refreshPage() {
             this.optionValue = '';
@@ -122,7 +155,7 @@ export default {
                 });
         },
         handleUpload(uploadFile) {
-            let loadingInstance = Loading.service();
+            this.loading = true;
             var fileType = this.optionValue;
             var fileSize = uploadFile.size;
             var fileName = uploadFile.name;
@@ -205,9 +238,7 @@ export default {
                                     message: 'Upload successfully!',
                                 });
                                 this.refreshPage();
-                                this.$nextTick(() => {
-                                    loadingInstance.close();
-                                });
+                                this.loading = false;
                             })
                             .catch((error) => {
                                 console.log(error);
@@ -254,9 +285,7 @@ export default {
                                 message: 'Upload successfully!'
                             });
                             this.refreshPage();
-                            this.$nextTick(() => {
-                                loadingInstance.close();
-                            });
+                            this.loading = false;
                         })
                         .catch((error) => {
                             console.log(error);

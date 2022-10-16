@@ -21,10 +21,14 @@
                     <i class="el-icon-user-solid"></i>
                     <div class="user-name">{{user.username}}</div>
                     <el-switch v-model="user.idlAccess" style="margin-left: 60px;" @change="update(user)"></el-switch>
-                    <el-switch v-model="user.ddeAccess.read" style="margin-left: 282px;" @change="update(user)"></el-switch>
-                    <el-switch v-model="user.ddeAccess.create" style="margin-left: 100px;" @change="update(user)" :disabled="!user.ddeAccess.read"></el-switch>
-                    <el-switch v-model="user.ddeAccess.download" style="margin-left: 120px;" @change="update(user)" :disabled="!user.ddeAccess.read"></el-switch>
-                    <el-switch v-model="user.ddeAccess.delete" style="margin-left: 120px;" @change="update(user)" :disabled="!user.ddeAccess.read"></el-switch>
+                    <el-switch v-model="user.ddeAccess.read" style="margin-left: 282px;" @change="update(user)">
+                    </el-switch>
+                    <el-switch v-model="user.ddeAccess.create" style="margin-left: 100px;" @change="update(user)"
+                        :disabled="!user.ddeAccess.read"></el-switch>
+                    <el-switch v-model="user.ddeAccess.download" style="margin-left: 120px;" @change="update(user)"
+                        :disabled="!user.ddeAccess.read"></el-switch>
+                    <el-switch v-model="user.ddeAccess.delete" style="margin-left: 120px;" @change="update(user)"
+                        :disabled="!user.ddeAccess.read"></el-switch>
                 </div>
             </div>
         </div>
@@ -53,29 +57,27 @@ export default {
                 user.ddeAccess.download = false;
                 user.ddeAccess.delete = false;
             }
-            console.log(user);
             let axios = require('axios');
             let data = JSON.stringify({
                 "collection": "users",
                 "database": "mymongo",
                 "dataSource": "Cluster0",
                 "filter": { "username": user.username },
-                "replacement": {
-                    "username": user.username,
-                    "pswd": user.pswd,
-                    "isAdmin": user.isAdmin,
-                    "idlAccess": user.idlAccess,
-                    "ddeAccess": {
-                        "create": user.ddeAccess.create,
-                        "read": user.ddeAccess.read,
-                        "download": user.ddeAccess.download,
-                        "delete": user.ddeAccess.delete,
-                    },
-                }
+                "update": {
+                    "$set": {
+                        "idlAccess": user.idlAccess,
+                        "ddeAccess": {
+                            "create": user.ddeAccess.create,
+                            "read": user.ddeAccess.read,
+                            "download": user.ddeAccess.download,
+                            "delete": user.ddeAccess.delete,
+                        },
+                    }
+                },
             });
             let config = {
                 method: 'post',
-                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/replaceOne',
+                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/updateOne',
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Request-Headers': '*',
