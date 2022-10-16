@@ -1,19 +1,23 @@
 <template>
-    <div>
-        <el-col :span="4">
-            <el-menu :router="true">
-                <img class="logo" src="../assets/logo.webp">
+    <div v-if="user.isAdmin">
+        <el-col :span="6">
+            <el-menu :router="true" :default-active="this.$route.path">
+                <img class="logo" src="../assets/logo.png">
                 <el-menu-item index="/admin-home/usergroup">
                     <i class="el-icon-document"></i>
                     <span slot="title">User Group Management</span>
                 </el-menu-item>
                 <el-menu-item index="/admin-home/authorizationadmin">
                     <i class="el-icon-document"></i>
-                    <span slot="title">Authorization Admin</span>
+                    <span slot="title">Authorization Request</span>
                 </el-menu-item>
                 <el-menu-item index="/admin-home/accessmanagement">
                     <i class="el-icon-document"></i>
-                    <span slot="title">Access Management</span>
+                    <span slot="title">Authorization Management</span>
+                </el-menu-item>
+                <el-menu-item index="/home/start">
+                    <i class="el-icon-refresh"></i>
+                    <span slot="title">User Home Page</span>
                 </el-menu-item>
             </el-menu>
             <div class="current-user">
@@ -37,6 +41,9 @@ export default {
             user: '',
         }
     },
+    created() {
+        this.getCurrentUser();
+    },
     methods: {
         routerTo(path) {
             this.$router.push(path)
@@ -53,8 +60,9 @@ export default {
             }).then(() => {
                 this.$message({
                     type: 'success',
-                    message: 'Log out'
+                    message: 'Logged out!'
                 });
+                localStorage.setItem("currentUser", '');
                 this.$router.push("/welcome");
             }).catch(() => {
                 this.$message({
@@ -62,10 +70,7 @@ export default {
                     message: 'Cancelled'
                 });
             });
-        }
-    },
-    created() {
-        this.getCurrentUser();
+        },
     },
 }
 </script>
@@ -74,9 +79,9 @@ export default {
 .logo {
     margin-top: 30px;
     margin-bottom: 30px;
-    margin-left: 20%;
-    width: 50%;
-    height: 50%;
+    margin-left: 30%;
+    width: 30%;
+    height: 30%;
 }
 
 .current-user {

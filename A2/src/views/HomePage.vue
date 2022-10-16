@@ -1,8 +1,8 @@
 <template>
-    <div>
-        <el-col :span="4" :offset="4">
-            <el-menu :router="true">
-                <img class="logo" src="../assets/logo.webp">
+    <div v-if="user != ''">
+        <el-col :span="6">
+            <el-menu :router="true" :default-active="this.$route.path">
+                <img class="logo" src="../assets/logo.png">
                 <el-menu-item index="/home/start">
                     <i class="el-icon-s-home"></i>
                     <span slot="title">Home</span>
@@ -14,14 +14,6 @@
                 <el-menu-item index="/home/search">
                     <i class="el-icon-search"></i>
                     <span slot="title">Search</span>
-                </el-menu-item>
-                <el-menu-item index="/home/indigenousdl">
-                    <i class="el-icon-document"></i>
-                    <span slot="title">Indigenous Dhudhuroa Language</span>
-                </el-menu-item>
-                <el-menu-item index="/home/englishdynamic">
-                    <i class="el-icon-document"></i>
-                    <span slot="title">English Language - Dynamic Demonstration Example</span>
                 </el-menu-item>
                 <el-submenu index="/home/englishstatic">
                     <template slot="title">
@@ -36,9 +28,21 @@
                         <el-menu-item index="/home/englishstaticcrp">Culturally Relevant Perspective</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
+                <el-menu-item index="/home/indigenousdl">
+                    <i class="el-icon-document"></i>
+                    <span slot="title">Indigenous Dhudhuroa Language</span>
+                </el-menu-item>
+                <el-menu-item index="/home/englishdynamic">
+                    <i class="el-icon-document"></i>
+                    <span slot="title">English Language - Dynamic Demonstration Example</span>
+                </el-menu-item>
                 <el-menu-item index="/home/fatsil">
                     <i class="el-icon-document"></i>
                     <span slot="title">FATSIL Privacy and Copyright</span>
+                </el-menu-item>
+                <el-menu-item v-if="user.isAdmin" index="/admin-home/usergroup">
+                    <i class="el-icon-refresh"></i>
+                    <span slot="title">Admin Home Page</span>
                 </el-menu-item>
             </el-menu>
             <div class="current-user">
@@ -47,7 +51,7 @@
                 <el-button icon="el-icon-switch-button" circle size="mini" @click="logout"></el-button>
             </div>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="18">
             <router-view></router-view>
         </el-col>
     </div>
@@ -61,6 +65,9 @@ export default {
         return {
             user: '',
         }
+    },
+    created() {
+        this.getCurrentUser();
     },
     methods: {
         routerTo(path) {
@@ -78,8 +85,9 @@ export default {
             }).then(() => {
                 this.$message({
                     type: 'success',
-                    message: 'Log out'
+                    message: 'Logged out!'
                 });
+                localStorage.setItem("currentUser", '');
                 this.$router.push("/welcome");
             }).catch(() => {
                 this.$message({
@@ -89,9 +97,6 @@ export default {
             });
         }
     },
-    created() {
-        this.getCurrentUser();
-    },
 }
 </script>
   
@@ -99,9 +104,9 @@ export default {
 .logo {
     margin-top: 30px;
     margin-bottom: 30px;
-    margin-left: 20%;
-    width: 50%;
-    height: 50%;
+    margin-left: 30%;
+    width: 30%;
+    height: 30%;
 }
 
 .current-user {

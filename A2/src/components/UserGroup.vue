@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="title">Group Management</div>
+        <div class="title">User Group Management</div>
         <el-button class="create-group" type="primary" plain @click="createGroup">Create a Group</el-button>
-        <div v-if="allGroupMembers != ''">
+        <div v-loading="loading">
             <el-tabs class="tabs" type="border-card" v-model="defaultTab">
                 <el-tab-pane v-for="group in allGroupMembers" :key="group.groupName" :label="group.groupName"
                     :name="group.groupName">
@@ -21,11 +21,12 @@ export default {
     data() {
         return {
             defaultTab: 'Group 1',
-            newGroup: { groupName: '', users: [] },
+            newGroup: { groupName: '', users: [], groupData: [] },
             allGroups: '',
             allUsers: '',
             allUsersData: [],
             allGroupMembers: [],
+            loading: false,
         }
     },
     created() {
@@ -46,6 +47,7 @@ export default {
                 }
                 this.allGroupMembers.push(groupMembers);
             }
+            this.loading = false;
         },
         createGroup() {
             this.$prompt('Input Group Name:', 'Create a New Group', {
@@ -75,9 +77,10 @@ export default {
                 "dataSource": "Cluster0",
                 "filter": { "groupName": group.groupName },
                 "update": {
-                    "groupName": group.groupName,
-                    "users": group.value,
-                }
+                    "$set": {
+                        "users": group.value,
+                    }
+                },
             });
             let config = {
                 method: 'post',
@@ -96,7 +99,8 @@ export default {
                     this.allUsers = '';
                     this.allUsersData = [];
                     this.allGroupMembers = [];
-                    this.getGroups();
+                    this.newGroup = { groupName: '', users: [], groupData: [] },
+                        this.getGroups();
                     this.$message({
                         type: 'success',
                         message: 'Update Successfully!',
@@ -135,13 +139,15 @@ export default {
                     this.allUsers = '';
                     this.allUsersData = [];
                     this.allGroupMembers = [];
-                    this.getGroups();
+                    this.newGroup = { groupName: '', users: [], groupData: [] },
+                        this.getGroups();
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
         getGroups() {
+            this.loading = true;
             let axios = require('axios');
             let data = JSON.stringify({
                 "collection": "userGroup",
@@ -207,7 +213,7 @@ export default {
     height: 66px;
     font-family: 'Inter';
     font-style: normal;
-    font-weight: 500;
+    font-weight: 550;
     font-size: 30px;
     line-height: 38px;
     color: #101828;

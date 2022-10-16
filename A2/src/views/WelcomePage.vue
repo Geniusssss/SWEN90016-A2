@@ -2,22 +2,21 @@
     <div>
         <el-row class="header">
             <el-col :span="6" :offset="6">
-                <img class="logo" src="../assets/logo.webp">
+                <img class="logo" src="../assets/logo.png">
             </el-col>
             <el-col :span="4" :offset="4" class="two-buttons">
-                <el-button type="primary" plain class="login-register" @click="routerTo('/login')">Login</el-button>
+                <el-button type="primary" plain class="login-register" @click="routerTo('/login')">Log in</el-button>
                 <el-button type="primary" plain class="login-register" @click="routerTo('/register')">Register
                 </el-button>
             </el-col>
         </el-row>
         <div>
-            <el-carousel indicator-position="outside" height="900px">
-                <el-carousel-item v-for="item in 4" :key="item">
-                    <img class="picture" src="../assets/welcome1.jpg">
+            <el-carousel indicator-position="outside" height="600px">
+                <el-carousel-item v-for="item in backgrouds" :key="item">
+                    <img class="picture" :src="item.path">
                 </el-carousel-item>
             </el-carousel>
         </div>
-
     </div>
 </template>
 
@@ -28,7 +27,17 @@ export default {
         routerTo(path) {
             this.$router.push(path);
         },
-    }
+    },
+    data() {
+        return {
+            backgrouds: [
+                { path: require("@/assets/welcome1.jpg") },
+                { path: require("@/assets/welcome2.jpg") },
+                { path: require("@/assets/welcome3.jpg") },
+                { path: require("@/assets/welcome4.jpg") },
+            ],
+        }
+    },
 }
 </script>
 
@@ -41,8 +50,8 @@ export default {
 }
 
 .logo {
-    width: 100%;
-    height: 100%;
+    width: 30%;
+    height: 30%;
 }
 
 .two-buttons {
@@ -76,6 +85,4 @@ export default {
     width: 100%;
     height: 100%;
 }
-
-
 </style>

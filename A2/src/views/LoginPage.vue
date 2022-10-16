@@ -1,6 +1,6 @@
 <template>
     <form class="form">
-        <el-page-header @back="routerTo('/')" content="Login" title="Back">
+        <el-page-header @back="routerTo('/')" content="Log in" title="Back">
         </el-page-header>
         <div class="container">
             <div id="textblock">Log in to your account</div>
@@ -9,7 +9,7 @@
             <input type="text" placeholder="Enter username" required v-model="username">
             <label for="psw" class="littletext"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" required v-model="pswd">
-            <el-button type="primary" class="button" @click="validation">Login</el-button>
+            <el-button type="primary" class="button" @click="loginValidation">Log in</el-button>
         </div>
     </form>
 </template>
@@ -21,66 +21,33 @@ export default {
             username: '',
             pswd: '',
             user: '',
-            allUsers: [],
         }
-    },
-    created() {
-        this.postUserList();
     },
     methods: {
         routerTo(path) {
             this.$router.push(path)
         },
         incorrect() {
-            this.$alert('Please try to input the right info'
-                , 'Wrong Username or Password',
+            this.$alert('Please try again'
+                , 'Incorrect username or password',
                 {
                     confirmButtonText: 'confirm',
                 });
         },
-        validation() {
-            {
-                var result = this.allUsers.some(item => {
-                    if (item.username == this.username) {
-                        if (item.pswd == this.pswd) {
-                            this.user = item;
-                            return true;
-                        }
-                    }
-                })
-                if (result) {
-                    localStorage.setItem("currentUser", JSON.stringify(this.user));
-                    if (this.user.isAdmin) {
-                        this.$router.push({
-                            path: '/admin-home',
-                            query: {
-                                user: this.user
-                            }
-                        });
-                    } else {
-                        this.$router.push({
-                            path: '/home/start',
-                            query: {
-                                user: this.user
-                            }
-                        });
-                    }
-                }
-                else {
-                    this.incorrect();
-                }
-            }
-        },
-        postUserList() {
+        loginValidation() {
             let axios = require('axios');
             let data = JSON.stringify({
                 "collection": "users",
                 "database": "mymongo",
                 "dataSource": "Cluster0",
+                "filter": {
+                    "username": this.username,
+                    "pswd": this.pswd,
+                },
             });
             let config = {
                 method: 'post',
-                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/find',
+                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/findOne',
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Request-Headers': '*',
@@ -90,13 +57,34 @@ export default {
             };
             axios(config)
                 .then((response) => {
-                    console.log(response.data.documents);
-                    this.allUsers = response.data.documents
+                    console.log(response.data.document);
+                    if (response.data.document != null) {
+                        this.user = response.data.document
+                        this.success();
+                    } else {
+                        this.incorrect();
+                    }
                 })
                 .catch((error) => {
                     console.log(error);
                 });
-        }
+        },
+        success() {
+            localStorage.setItem("currentUser", JSON.stringify(this.user));
+            this.$message({
+                type: 'success',
+                message: 'Logged in!'
+            });
+            if (this.user.isAdmin) {
+                this.$router.push({
+                    path: '/admin-home/usergroup',
+                });
+            } else {
+                this.$router.push({
+                    path: '/home/start',
+                });
+            }
+        },
     },
 }
 </script>

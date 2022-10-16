@@ -1,31 +1,34 @@
 <template>
     <div>
-        <div class="content">
-            <div class="title">Authority Management</div>
-        </div>
+        <div class="title">Authorization Management</div>
         <div class="row-section">
             <div class="list-title-1" type="margin-left: 50px">User Name</div>
-            <div class="list-title-2">Indigenous Dhudhuroa Language</div>
+            <div class="list-title-2">Indigenous Dhudhuroa Language Page</div>
             <div class="double-line">
-                <div class="list-title-3">Dynamic Demonstration Example</div>
+                <div class="list-title-3">English Language - Dynamic Demonstration Example Page</div>
                 <div class="crwd">
-                    <div class="crwd-section">Create</div>
                     <div class="crwd-section">Read</div>
-                    <div class="crwd-section">Write</div>
+                    <div class="crwd-section">Create</div>
+                    <div class="crwd-section">Download</div>
                     <div class="crwd-section">Delete</div>
                 </div>
             </div>
         </div>
+        <div style="width: 1200px;" v-loading="loading"></div>
         <div class="user-list">
             <div v-for="user in allUsers" :key="user.username">
                 <div class="row-section-2">
                     <i class="el-icon-user-solid"></i>
                     <div class="user-name">{{user.username}}</div>
-                    <el-switch v-model="user.idlAccess" class="switch-1" @change="update(user)"></el-switch>
-                    <el-switch v-model="user.ddeAccess.create" class="switch-2" @change="update(user)"></el-switch>
-                    <el-switch v-model="user.ddeAccess.read" class="switch-3" @change="update(user)"></el-switch>
-                    <el-switch v-model="user.ddeAccess.write" class="switch-3" @change="update(user)"></el-switch>
-                    <el-switch v-model="user.ddeAccess.delete" class="switch-3" @change="update(user)"></el-switch>
+                    <el-switch v-model="user.idlAccess" style="margin-left: 60px;" @change="update(user)"></el-switch>
+                    <el-switch v-model="user.ddeAccess.read" style="margin-left: 282px;" @change="update(user)">
+                    </el-switch>
+                    <el-switch v-model="user.ddeAccess.create" style="margin-left: 100px;" @change="update(user)"
+                        :disabled="!user.ddeAccess.read"></el-switch>
+                    <el-switch v-model="user.ddeAccess.download" style="margin-left: 120px;" @change="update(user)"
+                        :disabled="!user.ddeAccess.read"></el-switch>
+                    <el-switch v-model="user.ddeAccess.delete" style="margin-left: 120px;" @change="update(user)"
+                        :disabled="!user.ddeAccess.read"></el-switch>
                 </div>
             </div>
         </div>
@@ -38,6 +41,7 @@ export default {
     data() {
         return {
             allUsers: [],
+            loading: false,
         }
     },
     created() {
@@ -48,29 +52,32 @@ export default {
             this.$router.push(path)
         },
         update(user) {
-            console.log(user);
+            if (user.ddeAccess.read == false) {
+                user.ddeAccess.create = false;
+                user.ddeAccess.download = false;
+                user.ddeAccess.delete = false;
+            }
             let axios = require('axios');
             let data = JSON.stringify({
                 "collection": "users",
                 "database": "mymongo",
                 "dataSource": "Cluster0",
                 "filter": { "username": user.username },
-                "replacement": {
-                    "username": user.username,
-                    "pswd": user.pswd,
-                    "isAdmin": user.isAdmin,
-                    "idlAccess": user.idlAccess,
-                    "ddeAccess": {
-                        "create": user.ddeAccess.create,
-                        "read": user.ddeAccess.read,
-                        "write": user.ddeAccess.write,
-                        "delete": user.ddeAccess.delete,
-                    },
-                }
+                "update": {
+                    "$set": {
+                        "idlAccess": user.idlAccess,
+                        "ddeAccess": {
+                            "create": user.ddeAccess.create,
+                            "read": user.ddeAccess.read,
+                            "download": user.ddeAccess.download,
+                            "delete": user.ddeAccess.delete,
+                        },
+                    }
+                },
             });
             let config = {
                 method: 'post',
-                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/replaceOne',
+                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/updateOne',
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Request-Headers': '*',
@@ -87,6 +94,7 @@ export default {
                 });
         },
         getUserList() {
+            this.loading = true;
             let axios = require('axios');
             let data = JSON.stringify({
                 "collection": "users",
@@ -110,6 +118,7 @@ export default {
                 .then((response) => {
                     console.log(response.data.documents);
                     this.allUsers = response.data.documents
+                    this.loading = false;
                 })
                 .catch((error) => {
                     console.log(error);
@@ -120,19 +129,13 @@ export default {
 </script>
   
 <style scoped>
-.content {
+.title {
     margin: 50px;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
     width: 1096px;
     height: 66px;
-}
-
-.title {
     font-family: 'Inter';
     font-style: normal;
-    font-weight: 500;
+    font-weight: 550;
     font-size: 30px;
     line-height: 38px;
     color: #101828;
@@ -141,17 +144,18 @@ export default {
 .user-list {
     display: flex;
     flex-direction: column;
-    margin: 50px;
+    margin-left: 50px;
 }
 
 .row-section {
+    margin-left: 50px;
+    margin-bottom: 30px;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
 }
 
 .row-section-2 {
-    margin-left: 40px;
     margin-bottom: 30px;
     display: flex;
     flex-direction: row;
@@ -159,7 +163,6 @@ export default {
 }
 
 .list-title-1 {
-    margin-left: 80px;
     font-family: 'Inter';
     font-style: normal;
     font-weight: 500;
@@ -183,18 +186,6 @@ export default {
     font-weight: 500;
     font-size: 15px;
     color: #667085;
-}
-
-.switch-1 {
-    margin-left: 30px;
-}
-
-.switch-2 {
-    margin-left: 270px;
-}
-
-.switch-3 {
-    margin-left: 100px;
 }
 
 .double-line {

@@ -1,192 +1,150 @@
 <template>
-    <div>
-        <el-card class="box-card">
-            <div slot="header" class="clearfix">
-                <span>Sentences</span>
-                <!-- <el-button style="float: right; padding: 3px 0" type="text">Add</el-button> -->
-            </div>
-            <div>
-                <div class="text item">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                </div>
-                <div class="text item">
-                    Ut enim ad minim veniam, quis nostrud exercitation. 
-                </div>
-            </div>
-        </el-card>
-        <el-card class="box-card">
-            <div slot="header" class="clearfix">
-                <span>Symbols</span>
-                <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
-            </div>
-            <div>
-                <div class="text item">
-                        ,
-                </div>
-                <div class="text item">
-                        .
-                </div>
-                <div class="text item">
-                        !
-                </div>
-                <div class="text item">
-                        ?
-                </div>
-                <div class="text item">
-                        :
-                </div>
-            </div>
-        </el-card>
-        <el-card class="box-card">
-            <div slot="header" class="clearfix">
-                <span>Images</span>
-                <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
-            </div>
-            <div>
-                <el-row>
-                    <el-col :span="8" class="image-card" >
-                        <el-card class="" :body-style="{ padding: '0px' }">
-                            <img src="../assets/Dhudhuroa_character.png" class="image">
-                            <div style="padding: 14px;">
-                                <span>Dhudhuroa language</span>
-                                <div class="bottom clearfix">
-                                <!-- <time class="time">{{ currentDate }}</time> -->
-                                <!-- <el-button type="text" class="button">Action</el-button> -->
-                                </div>
-                            </div>
-                        </el-card>
-                    </el-col>
-                    <el-col :span="8" class="image-card" >
-                        <el-card  :body-style="{ padding: '0px' }">
-                            <img src="../assets/static_page_old_paper.png" class="image">
-                            <div style="padding: 14px;">
-                                <span>Dhudhuroa Research Paper</span>
-                                <div class="bottom clearfix">
-                                <!-- <time class="time">{{ currentDate }}</time> -->
-                                <!-- <el-button type="text" class="button">Action</el-button> -->
-                                </div>
-                            </div>
-                        </el-card>
-                    </el-col>
-                <!-- </el-row>
-                <el-row> -->
-                    <el-col :span="8" >
-                        <el-card class="image-card" :body-style="{ padding: '0px' }">
-                            <img src="https://www.chicken.ca/wp-content/uploads/2020/09/healthy-chick-burgers.jpg" class="image">
-                            <div style="padding: 14px;">
-                                <span>Delicious food</span>
-                                <div class="bottom clearfix">
-                                </div>
-                            </div>
-                        </el-card>
-                    </el-col>
-                </el-row>
-            </div>
-        </el-card>
-        <el-card class="box-card">
-            <div slot="header" class="clearfix">
-                <span>Songs</span>
-                <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
-            </div>
-            <div class="text item">
-                <h4>Sample MP3</h4>
-                <audio controls>
-                    <source src="../assets/sample.mp3" type="audio/mpeg">
-                    Your browser does not support the audio tag.
-                </audio>
-                
-            </div>
-        </el-card>
-        <el-card class="box-card">
-            <div slot="header" class="clearfix">
-                <span>UML for Language Data Types</span>
-                <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
-            </div>
-            <div class="text item">
-                <div class="demo-image__placeholder">
-                    <div class="block">
-                        <img src="@/assets/language_data_UML.png" class="image">
+    <div class="column">
+        <div>
+            <div class="title">English Language - Static Example</div>
+            <div v-for="item in allData" :key="item._id">
+                <el-card class="box-card">
+                    <div slot="header" class="card-header">
+                        <div style="width: 300px;">{{item.fileType}}</div>
                     </div>
-                </div>
-                
+                    <div v-if="item.fileType == 'Sentence' || item.fileType == 'Symbol'" class="text item">{{item.text}}
+                    </div>
+                    <div v-if="item.fileType == 'Image'">
+                        <el-card class="card-image">
+                            <div style="margin-bottom: 20px;">{{item.fileName}}</div>
+                            <img :src="item.fileCode" class="image">
+                        </el-card>
+                    </div>
+                    <div v-if="item.fileType == 'Song'">
+                        <div class="music-title">{{item.fileName}}</div>
+                        <audio controls controlsList="nodownload" class="audio">
+                            <source :src="item.fileCode" type="audio/mpeg">
+                            Your browser does not support the audio tag.
+                        </audio>
+                    </div>
+                </el-card>
             </div>
-        </el-card>
+            <el-card class="box-card" v-loading="loading">
+                <div slot="header" class="card-header">
+                    <div style="width: 400px;">UML Information Model of Language Data</div>
+                </div>
+                <el-card>
+                    <img src="../assets/language_data_UML.png" class="uml">
+                </el-card>
+            </el-card>
+        </div>
     </div>
 </template>
-  
+
 <script>
 export default {
-    // import VueAudio from 'vue-audio';
     name: 'EnglishStatic',
+    created() {
+        this.user = JSON.parse(localStorage.getItem("currentUser") || '[]');
+        this.getData();
+    },
     data() {
         return {
-            currentDate: new Date(),
+            user: '',
+            allData: '',
+            loading: false,
         };
     },
     methods: {
         routerTo(path) {
             this.$router.push(path)
         },
+        getData() {
+            this.loading = true;
+            let axios = require('axios');
+            let data = JSON.stringify({
+                "collection": "StaticData",
+                "database": "mymongo",
+                "dataSource": "Cluster0",
+            });
+            let config = {
+                method: 'post',
+                url: 'https://data.mongodb-api.com/app/data-rtrxq/endpoint/data/v1/action/find',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Request-Headers': '*',
+                    'api-key': 'alJbGe2FTUy9nKCQiZOgQIQR6y5X28uDGjPW5EM76XnSjG9Hyneag4xe5gT8cnkg',
+                },
+                data: data
+            };
+            axios(config)
+                .then((response) => {
+                    console.log(response.data.documents);
+                    this.allData = response.data.documents;
+                    this.loading = false;
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
     }
 }
 </script>
   
 <style scoped>
- .text {
-    font-size: 14px;
-  }
+.column {
+    margin: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+}
 
-  .item {
-    margin-bottom: 18px;
-  }
+.title {
+    margin-bottom: 50px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 550;
+    font-size: 30px;
+    line-height: 38px;
+    color: #101828;
+}
 
-  .clearfix:before,
-  .clearfix:after {
-    display: table;
-    content: "";
-  }
-  .clearfix:after {
-    clear: both
-  }
-
-  .box-card {
+.box-card {
     width: 680px;
-    margin-left: 100px;
     margin-bottom: 10px;
-  }
+}
 
-  .image-card {
-    margin-left: 10px;
-    margin-bottom: 10px;
-  }
+.card-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
 
-  .time {
-    font-size: 13px;
-    color: #999;
-  }
-  
-  .bottom {
-    margin-top: 13px;
-    line-height: 12px;
-  }
+.text {
+    font-size: 20px;
+}
 
-  .button {
-    padding: 0;
-    float: right;
-  }
+.item {
+    margin-bottom: 18px;
+}
 
-  .image {
+.image {
     width: 100%;
     display: block;
-  }
+}
 
-  .clearfix:before,
-  .clearfix:after {
-      display: table;
-      content: "";
-  }
-  
-  .clearfix:after {
-      clear: both
-  }
+.card-image {
+    height: 50%;
+    width: 50%;
+}
+
+.music-title {
+    margin-bottom: 20px;
+}
+
+.audio {
+    width: 500px;
+}
+
+.uml {
+    width: 100%;
+    display: block;
+}
 </style>
